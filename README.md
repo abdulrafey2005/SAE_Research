@@ -413,4 +413,3 @@ Conclusions must consider:
 - Experimental coverage
 - Data-selection limitations
 
-All reported findings must be derived from actual experimental outputs rather than assumed or placeholder results.
