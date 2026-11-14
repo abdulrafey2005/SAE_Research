@@ -1,0 +1,19 @@
+{
+  "project_title": "Evidence-Grounded Causal Evaluation and Visual Analytics of Sparse Autoencoder Features in Code-Generation Behaviour of Gemma-2-2B",
+  "model_id": "google/gemma-2-2b",
+  "dataset_id": "google-research-datasets/mbpp",
+  "dataset_config": "sanitized",
+  "sample_size": 300,
+  "random_seed": 42,
+  "split": {
+    "train": 0.7,
+    "validation": 0.15,
+    "test": 0.15
+  },
+  "prompt_families": [
+    "canonical",
+    "paraphrase",
+    "ood"
+  ],
+  "note": "Select activation layer and SAE hyperparameters before held-out test evaluation."
+}

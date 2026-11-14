@@ -1,0 +1,11 @@
+{
+    "total_prompts": 630,
+    "successful_prompts": 226,
+    "failed_prompts": 404,
+    "total_features": 16384,
+    "significant_features_fdr_0.05": 0,
+    "success_associated_selected": 50,
+    "failure_associated_selected": 50,
+    "mean_baseline_pass_rate": 0.35873015873015873,
+    "discovery_split": "train"
+}

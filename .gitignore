@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+.ipynb_checkpoints/
+.cache/
+data/raw/*
+data/processed/*
+activations/
+sae_models/
+results/*.csv
+results/*.json
+!data/raw/.gitkeep
+!data/processed/.gitkeep

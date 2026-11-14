@@ -1,0 +1,414 @@
+experiment_id,prompt_sha256,task_id,prompt_family,split,intervention_type,feature_group,feature_id,steering_strength,baseline_passed,intervention_passed,generated_code,error_message,execution_time_sec,hook_calls,max_residual_delta,random_seed
+b661f1bfb0fc31f36945,b757fbca43e8e0181fb8f15d7a0459704237d32477bbf93f00b56a004042e17a,441,canonical,validation,noop_control,none,,0.0,1,1,"import math
+def surfacearea_cube(n):
+    return 6 * n ** 2",,0.08,23,0.0,42
+f26e9ee6dfbf9fbf26bf,686361c4d0ac9321ef4e67c8cda09ff4dff271436b3bf1871757895b5145b095,441,paraphrase,validation,noop_control,none,,0.0,1,1,"def surfacearea_cube(n):
+    return 6 * n ** 2",,0.062,20,0.0,42
+0e0bac271fb2891dc88e,0cdf2a6ae0b5f26283c96d7d8c6473dc0b77e81e677e81c9f92b04c2bc4519d9,441,ood,validation,noop_control,none,,0.0,1,1,"def surfacearea_cube(n):
+    return 6 * n ** 2",,0.063,20,0.0,42
+cbc34fe6bcc8d0752eb0,ffee79f290fe9fc0abe186feb7da5539618ff9813fcb8eb2dada80400c3d394b,248,canonical,validation,noop_control,none,,0.0,0,0,"def harmonic_sum(n):
+    return 1 / (n * (n + 1))",NameError: name 'math' is not defined,0.063,24,0.0,42
+5936605006edec1474f1,a68f3582e9ac673d0cf89afa3dc87629c4408c4ba84b03ab94f350015afb34ea,248,paraphrase,validation,noop_control,none,,0.0,0,0,"def harmonic_sum(n):
+    return 1 + sum(1 / i for i in range(1, n + 1))",NameError: name 'math' is not defined,0.073,32,0.0,42
+21d5f09139c72da49795,6248269f31f600b3622217a5c164d2b694df635378f58595535960f5ae4f65aa,248,ood,validation,noop_control,none,,0.0,0,0,"def harmonic_sum(n):
+    return 1 / (n * (n + 1))",NameError: name 'math' is not defined,0.099,24,0.0,42
+79dec80592d8623676f9,f278e51e789b530b4661ed9badec57cba63c75ccc79216370fa8f3b8daa19900,640,canonical,validation,noop_control,none,,0.0,0,0,"def remove_parenthesis(string):
+    return """".join(string.split(""("")[0].split("")""))",AttributeError: 'list' object has no attribute 'split',0.064,27,0.0,42
+55af9773eb94988bba0b,80f48cbadabf491271497976480d0b32bebe76bb4ec185fa31335079357adcf5,640,paraphrase,validation,noop_control,none,,0.0,0,0,"def remove_parenthesis(string):
+    return """".join(string.split(""("")[0].split("")""))",AttributeError: 'list' object has no attribute 'split',0.062,27,0.0,42
+4ba1232eb5fd49003e90,f8e8796ac91f0a39fa8444b3d48b857f269d47828f4479c14533075b82338b45,640,ood,validation,noop_control,none,,0.0,0,0,"def remove_parenthesis(string):
+    return string.replace(""("", """").replace("")"", """")",AttributeError: 'list' object has no attribute 'replace',0.059,23,0.0,42
+a479251a2078683d0485,362ab934617314377cfff5c697dd6a09abe70648738f6e254a59ba2f77b03075,261,canonical,validation,noop_control,none,,0.0,1,1,"def division_elements(test_tup1, test_tup2):
+    return tuple(map(lambda x, y: x / y, test_tup1, test_tup2))",,0.081,43,0.0,42
+d608aacf765d77087733,dc01b67d7defa6c540bfc90fb86b58fb91f774ad9c2ee86c57c82352502eaa33,261,paraphrase,validation,noop_control,none,,0.0,1,1,"def division_elements(test_tup1, test_tup2):
+    return tuple(map(lambda x, y: x / y, test_tup1, test_tup2))",,0.067,43,0.0,42
+c3428520a56556359f38,08ca9e9ccf56cc97a4e21cc742e2e486055e2d971f86e471dd8d5dd4c0051abf,261,ood,validation,noop_control,none,,0.0,1,1,"def division_elements(test_tup1, test_tup2):
+    return tuple(map(lambda x, y: x // y, test_tup1, test_tup2))",,0.062,43,0.0,42
+be889f758ab9b9e31baf,e4bb369fce458ec29a8105c7978309d79e1f0d4fe90d6da47b91130e32a9f717,476,canonical,validation,noop_control,none,,0.0,1,1,"def big_sum(nums):
+    return max(nums) + min(nums)",,0.08,21,0.0,42
+9370a76a91b3642e4532,4a4df09679c4419b5d399ef596bb8dfcca0790839d9e5f155a006f795f8c78cb,476,paraphrase,validation,noop_control,none,,0.0,1,1,"def big_sum(nums):
+    return max(nums) + min(nums)",,0.06,21,0.0,42
+85a9dcf343436ba7cffe,7a4309aa1fae2d9f0f80d13504d337384076e0e78270671802c63e31db42eacc,476,ood,validation,noop_control,none,,0.0,1,1,"def big_sum(nums):
+    return max(nums) + min(nums)",,0.07,21,0.0,42
+52738b9667fb2b67207d,c1652e7ed64af68a10a852dc97b3e22d9175910f00f40a94f3aa51895a955b70,85,canonical,validation,noop_control,none,,0.0,1,1,"import math
+def surfacearea_sphere(r):
+    return 4 * math.pi * r ** 2",,0.079,27,0.0,42
+65c96aa9cfe8a915c04a,265d4f9c7f7f218416460238793a85af8c7e8fb95bbc3f73a9e9e2c613f3d809,85,paraphrase,validation,noop_control,none,,0.0,1,1,"import math
+def surfacearea_sphere(r):
+    return 4 * math.pi * r ** 2",,0.066,27,0.0,42
+cfdd06ee612c9414cc55,add214eec41b65cdea89bf1ea22fb1358e7375d23346fb6f2fd25071a42d36d1,85,ood,validation,noop_control,none,,0.0,1,1,"import math
+def surfacearea_sphere(r):
+    return 4 * math.pi * r ** 2",,0.06,27,0.0,42
+13027badc69a7e2f9217,fc8feb034a53c0cede478d82b2ac88a27efe630b0374c2926ee6d9838e99b66d,738,canonical,validation,noop_control,none,,0.0,0,0,"def geometric_sum(n):
+    if n == 1:
+        return 1
+    return n * geometric_sum(n - 1)",AssertionError: ,0.06,36,0.0,42
+b99555d68be968b6d838,320dee6e75c1ff553e9375fbda7c7d95c249ea6dd89e84edc13d58f06728f873,738,paraphrase,validation,noop_control,none,,0.0,0,0,"def geometric_sum(n):
+    if n == 1:
+        return 1
+    return n * geometric_sum(n - 1)",AssertionError: ,0.061,36,0.0,42
+8cb8dbc869a52cb28487,5a10fce6d01898a99672fba65280756a3d227dfdc019d67585ceeb5ab53a256a,738,ood,validation,noop_control,none,,0.0,0,0,"def geometric_sum(n):
+    if n == 1:
+        return 1
+    return n * geometric_sum(n - 1)",AssertionError: ,0.059,36,0.0,42
+1c66bd8626d028aa4785,1caea08b4a7284ddf344055a18a3727c899f70b30f3415aab797014a1c1154a9,735,canonical,validation,noop_control,none,,0.0,0,0,"def toggle_middle_bits(num):
+    return num ^ (num >> 1) ^ (num << 1)",AssertionError: ,0.06,29,0.0,42
+acc998da6c970e91cd81,45f20e50b918574da8bb30455ee68681200e747caef6a1347e6bfaf307da771e,735,paraphrase,validation,noop_control,none,,0.0,0,0,"def toggle_middle_bits(n):
+    return (n & 0b1111111) | (n & 0b1111111 << 1)",AssertionError: ,0.063,46,0.0,42
+ff4ca25ead8b7d491c02,2fa48a1182608780a0f079cdfeb5c0182ce235804a3e3d07c47cd97eee7f5c96,735,ood,validation,noop_control,none,,0.0,0,0,"def toggle_middle_bits(num):
+    return num ^ (num >> 1) ^ (num << 1)",AssertionError: ,0.059,29,0.0,42
+8886b4b31fcfd4c05f7e,bee1b7fd85908b73ff38a4419882aab91597ea44ec57268e828dee6c832fdfb9,101,canonical,validation,noop_control,none,,0.0,1,1,"import math
+def kth_element(nums, k):
+    return nums[k-1]",,0.062,24,0.0,42
+93b294a6848fbed7a104,d1422e70522825cc1bc721d6e410964e87310dad2d69a7a5c45d6010ad8ac162,101,paraphrase,validation,noop_control,none,,0.0,1,1,"def kth_element(nums, k):
+    return nums[k-1]",,0.082,21,0.0,42
+5b0c7f4e982bcb05fa81,70fe3ac92edff80eeeb260c07b39e9e08f98a75197a4c55eeacfaac2bef8494f,101,ood,validation,noop_control,none,,0.0,1,1,"def kth_element(nums, k):
+    return nums[k-1]",,0.093,21,0.0,42
+108939aa1ea5623eb7ab,18c4431a099dc62eedf44dc820620d1f5d7c05ee5b5dbeca3141cf10f3914dbc,4,canonical,validation,noop_control,none,,0.0,1,1,"import heapq
+def heap_queue_largest(nums, n):
+    return heapq.nlargest(n, nums)",,0.085,28,0.0,42
+b9ad30bb99459a80c63a,198db8d64fb87c4fb84e8979e098a9293d20cceb8e2cbc0bd6df1767276af48d,4,paraphrase,validation,noop_control,none,,0.0,1,1,"import heapq
+def heap_queue_largest(nums, n):
+    return heapq.nlargest(n, nums)",,0.06,28,0.0,42
+e67550316434e8639e2a,987b037c5e3ff9ca21ffa9cbb42ceb738dc77bc6cca8fd9dd816797d9e2d129f,4,ood,validation,noop_control,none,,0.0,1,1,"import heapq
+def heap_queue_largest(nums, n):
+    return heapq.nlargest(n, nums)",,0.078,28,0.0,42
+d997a28e0911fe7fb19c,3fc2c333cf23f0cbb70dd7b3c4bfe7fffc695276b47dc1eba0cd0e07dc4b6b74,611,canonical,validation,noop_control,none,,0.0,0,0,"def max_of_nth(matrix, n):
+    return max(matrix[n])",AssertionError: ,0.062,22,0.0,42
+2d0b39b05cb24d2a6cf9,8daa62514539a6b83a35e8d12481139ff33ec10ebd5df35002101faa547cf209,611,paraphrase,validation,noop_control,none,,0.0,0,0,"def max_of_nth(matrix, n):
+    return max(matrix[n])",AssertionError: ,0.083,22,0.0,42
+62c5e9bb2850b79751e8,796f9bef3971c05557eb71c38967a15f4dbc4e60cba3494fb21ca906cb33edb0,611,ood,validation,noop_control,none,,0.0,0,0,"def max_of_nth(matrix, n):
+    return max(matrix[n])",AssertionError: ,0.081,22,0.0,42
+55020127ecbf7aae579b,87e977eb4733df994b15359c33025bb33e5c4c888e7c80edfa2a343fc4f25578,749,canonical,validation,noop_control,none,,0.0,0,0,"import operator
+def sort_numeric_strings(nums):
+    return sorted(nums, key=operator.itemgetter(0), reverse=True)",AssertionError: ,0.06,34,0.0,42
+388dbc8e96a6039f3433,1ed9a0dceabc3e542bb1bdb6d71b5e84cc4e56eb23a859a056bb43e436b9cd5d,749,paraphrase,validation,noop_control,none,,0.0,0,0,"def sort_numeric_strings(nums):
+    return sorted(nums, key=lambda x: int(x))",AssertionError: ,0.06,27,0.0,42
+d8eaa08d88c664e1e143,8c40670b25d51c3958794f9bbeb73c709bc021418b810bdb827049718ede5b11,749,ood,validation,noop_control,none,,0.0,0,0,"import operator
+def sort_numeric_strings(nums):
+    return sorted(nums, key=operator.itemgetter(0), reverse=True)",AssertionError: ,0.087,34,0.0,42
+dcf7c42bd9dbdf0b0d4b,8deb06b45c60a6ccf9e6297dd312094f766696e7bf2fd13000920a59af292e3d,400,canonical,validation,noop_control,none,,0.0,0,0,"def extract_freq(nums):
+    return len(set(nums))",AssertionError: ,0.079,18,0.0,42
+ab6c566357c966e9f988,5662567a36c7d155fbab90b5b004d67c5ab28f973fc220779112d03fcfaf2a2d,400,paraphrase,validation,noop_control,none,,0.0,0,0,"def extract_freq(nums):
+    return len(set(nums))",AssertionError: ,0.069,18,0.0,42
+82a41dcc96271cb7834c,a9f340664966562366c639d4df6b2f619803a91a6c2958109a38de462d2bbcdd,400,ood,validation,noop_control,none,,0.0,0,0,"def extract_freq(nums):
+    return len(set(nums))",AssertionError: ,0.059,18,0.0,42
+d5c1d1ed48039006f24b,b88c369ae7a93eb9ee8b3e2e70927e395c2b088e441a6fc18e5bdafbe3c6ce3a,138,canonical,validation,noop_control,none,,0.0,0,0,"import math
+def is_Sum_Of_Powers_Of_Two(n):
+    if n == 0:
+        return False
+    if n == 1:
+        return True
+    if n % 2 == 0:
+        return is_Sum_Of_Powers_Of_Two(n // 2)
+    return False",AssertionError: ,0.06,79,0.0,42
+608f67e72239e424b9a6,694dd57cedb783f1980e27297f2897b1e5c1b6e4711451dbda9b58df2b3ac0aa,138,paraphrase,validation,noop_control,none,,0.0,0,0,"def is_Sum_Of_Powers_Of_Two(n):
+    return n > 0 and (n & (n - 1)) == 0",AssertionError: ,0.062,37,0.0,42
+c8d88a6f94195ec65f7f,642c4c78f083ea7991e6b0a88c7c7693ef44d7b692a3f1bc914acccfe1ae1559,138,ood,validation,noop_control,none,,0.0,0,0,"def is_Sum_Of_Powers_Of_Two(n):
+    return n > 0 and (n & (n - 1)) == 0",AssertionError: ,0.081,37,0.0,42
+6ed770bf36a7859a2e44,ce2127ebc71bf1c7faf339875491be54ca17bf0215e8d7fd09e080fc78933e18,421,canonical,validation,noop_control,none,,0.0,0,0,"def concatenate_tuple(tup):
+    return tuple(tup[0] + ""-"" + str(tup[1]) for tup in tup)",TypeError: 'int' object is not subscriptable,0.06,32,0.0,42
+9c7046b1d5bb11548484,a479a9e4c028fdc57cb6cf9093cbe3a42792239d2b160fb2f3107c0dddb5f344,421,paraphrase,validation,noop_control,none,,0.0,0,0,"def concatenate_tuple(tup):
+    return tuple(tup[0] + ""-"" + str(tup[1]) + ""-"" + str(tup[2]) + ""-"" + tup[3])",AssertionError: ,0.086,43,0.0,42
+7e04ce76e42e05cd20a1,1c3aa6bdc54edb7721e86513de60bacfc8f94bf5661fd744a43ef85787b45934,421,ood,validation,noop_control,none,,0.0,0,0,"def concatenate_tuple(tup):
+    return tuple(tup[0] + ""-"" + str(tup[1]) + ""-"" + str(tup[2]) + ""-"" + tup[3])",AssertionError: ,0.065,43,0.0,42
+01e3dc163ec4368ce52a,59634551256d85bb13d15f25d6ec6e48ed834aa7291054f8d54fd0829292c797,769,canonical,validation,noop_control,none,,0.0,0,0,"def Diff(list1, list2):
+    return [x - y for x, y in zip(list1, list2)]",AssertionError: ,0.082,31,0.0,42
+0bdd3adaefb4e2209e96,5a8d218e4f6cf42734d28e6ba2c1cd66afc07c6abf2dfd479443311abfd1378b,769,paraphrase,validation,noop_control,none,,0.0,0,0,"def Diff(list1, list2):
+    return [x - y for x, y in zip(list1, list2)]",AssertionError: ,0.074,31,0.0,42
+971fa51816bbc43a51c0,8b9320438cd010e56a533fa9e57b6a042951abe2c1c83f2b6b2c9bc6f5d30cab,769,ood,validation,noop_control,none,,0.0,0,0,"def Diff(list1, list2):
+    return [x - y for x, y in zip(list1, list2)]",AssertionError: ,0.063,31,0.0,42
+27860ef4f3d3ac77e390,c64bf11b067fe9df428421a23a73ad7a977f1754bb7352138fd58a34662b384d,463,canonical,validation,noop_control,none,,0.0,0,0,"def max_subarray_product(nums):
+    max_product = 0
+    max_product_end = 0
+    for i in range(len(nums)):
+        if nums[i] > 0:
+            max_product_end = max(max_product_end, nums[i])
+            max_product = max(max_product, max_product_end * nums[i])
+        else:
+            max_product_end = 0
+    return max_product",AssertionError: ,0.061,114,0.0,42
+92682bf5034cc89d8d75,a43f530fd26a101496a13eab5c7c75f671a6c37ddc994a71e440d748f436d84c,463,paraphrase,validation,noop_control,none,,0.0,0,0,"def max_subarray_product(nums):
+    return max(nums)",AssertionError: ,0.083,19,0.0,42
+5ea40026e4fda06d474e,f4806acc24c5eb521f4804edef65fbe476ac02d96b1a05d4676b1564b9f91f07,463,ood,validation,noop_control,none,,0.0,0,0,"def max_subarray_product(nums):
+    return max(nums)",AssertionError: ,0.06,19,0.0,42
+857f825659ebde3549e6,013516e44fc2d01f49204a72f69a8dfb276abd507ccc76666b68c31ca2f50d25,629,canonical,validation,noop_control,none,,0.0,1,1,"def Split(nums):
+    return [num for num in nums if num % 2 == 0]",,0.06,25,0.0,42
+893bfcc569ac59f2cce0,acaa488be8db170bd8ae364bf9f80866ebc119de85b9978970c760c5faf37c04,629,paraphrase,validation,noop_control,none,,0.0,1,1,"def Split(nums):
+    return [num for num in nums if num % 2 == 0]",,0.063,25,0.0,42
+bc401a9b747e02aee40c,136e8f905599ce3cdfdff980933f29c61ac4c1c93b4879dd8cc1525b2c81d36f,629,ood,validation,noop_control,none,,0.0,1,1,"def Split(nums):
+    return [num for num in nums if num % 2 == 0]",,0.084,25,0.0,42
+21e2fb53c9c61f133d97,643495c5b4739683dcb3ba4b5ca20d3f1b34915353b64c3e88502fbf305304ab,59,canonical,validation,noop_control,none,,0.0,0,0,"def is_octagonal(n):
+    return (n * (3 * n - 1)) // 2 == n",AssertionError: ,0.058,29,0.0,42
+2933754aee09e9814a92,18f0489b0fff95e0ca80a41710dd1a95469203c3694d5f6cf06a626ab6cf93ed,59,paraphrase,validation,noop_control,none,,0.0,0,0,"def is_octagonal(n):
+    return (n * (3 * n - 1)) // 2 == n",AssertionError: ,0.058,29,0.0,42
+1d7dcf6d709762fedb41,45d73c91dfb5ec2a22fbaf76e80e9d698b73c38deda03cf897436534a251b1af,59,ood,validation,noop_control,none,,0.0,0,0,"def is_octagonal(n):
+    return (n * (3 * n - 1)) // 2 == n",AssertionError: ,0.061,29,0.0,42
+7d39cd23b84c14c511d6,587b7d46e3f90eaf75c59c0e7556e734bd775c30abf66732e46284059b2048ce,581,canonical,validation,noop_control,none,,0.0,0,0,"import math
+def surface_Area(base, height):
+    return 2 * base * height + 4 * base * math.sqrt(base ** 2 + height ** 2)",AssertionError: ,0.061,43,0.0,42
+686292de5972846e64e7,f73e0858cfeab6a5e2beaf327266a8f6f6a23f1c31de685eef5fd39410c01572,581,paraphrase,validation,noop_control,none,,0.0,0,0,"import math
+def surface_Area(base, height):
+    return 2 * base * height + 4 * base * math.sqrt(base ** 2 + height ** 2)",AssertionError: ,0.061,43,0.0,42
+e017b95f80759fc0d092,a69b044904b15b9455786fbe1e623d532a049d9f323a050901ce040748c0e86e,581,ood,validation,noop_control,none,,0.0,0,0,"import math
+def surface_Area(base, height):
+    return 2 * base * height + 4 * base * math.sqrt(base ** 2 + height ** 2)",AssertionError: ,0.059,43,0.0,42
+102bad312cb8178080dd,2a86a87946a1b8baea2642d8ac0e1d70b864a12d983872befbf254c542144840,808,canonical,validation,noop_control,none,,0.0,1,1,"def check_K(test_tup, k):
+    return any(test_tup[i] == k for i in range(len(test_tup)))",,0.087,37,0.0,42
+323c86ebbf768b30ac98,63ae7828df088c4ab4151ee1ce8dbf640aed9344e74c4189b7541c5536f75ab9,808,paraphrase,validation,noop_control,none,,0.0,1,1,"def check_K(test_tup, k):
+    return any(test_tup[i] == k for i in range(len(test_tup)))",,0.082,37,0.0,42
+12a5af007a45b6e4f87e,0d0ce8fe43a8f4acdda63b7943ae94c5c89490677a5dfba3457b76c1491d0ee7,808,ood,validation,noop_control,none,,0.0,1,1,"def check_K(test_tup, k):
+    return test_tup.count(k) == 1",,0.061,27,0.0,42
+93f694c601aa2b16bc9e,9475061a7b80db4403790e82eb4da45ad1be6655afda211d0782188593d42f7e,77,canonical,validation,noop_control,none,,0.0,0,0,"def is_Diff(n):
+    if n % 11 == 0:
+        return False
+    return True",AssertionError: ,0.059,29,0.0,42
+1620cf4027af258f1674,d26ddb0ba388d6d3d52d563a9eff711aa12028c19e98b94df49c59ecedf98d8e,77,paraphrase,validation,noop_control,none,,0.0,0,0,"def is_Diff(n):
+    if n % 11 == 0:
+        return False
+    return True",AssertionError: ,0.061,29,0.0,42
+84ecd994e23a38989feb,d9f7487da6f0302c1eabba7ab4afa4861a2b843c67e30545231c9bbfd41a75d3,77,ood,validation,noop_control,none,,0.0,0,0,"def is_Diff(n):
+    if n % 11 == 0:
+        return False
+    return True",AssertionError: ,0.06,29,0.0,42
+4a1a44938100fb36d268,c410769550f03bc0a5e149e1ff61fa2cd33c6699dcf07ea0752eaa3d1c519d31,99,canonical,validation,noop_control,none,,0.0,1,1,"def decimal_to_binary(n):
+    return bin(n)[2:]",,0.059,20,0.0,42
+ffecbf706d927f02f9f6,eca84dabe2a794be6d1bb73e7e0e1f4c3d627a462ea0724c5b5d790393f6b182,99,paraphrase,validation,noop_control,none,,0.0,1,1,"def decimal_to_binary(n):
+    return bin(n)[2:]",,0.06,20,0.0,42
+61c2f5992b56abe87a18,1b84d55fa39f52b7abb4fc9ff2a81995862df4350af7e4b2b0c329d70efdb957,99,ood,validation,noop_control,none,,0.0,1,1,"def decimal_to_binary(n):
+    return bin(n)[2:]",,0.059,20,0.0,42
+b116043623d2df9acf59,7175df4bb238ada185ba657b8fa1ddf6af58d3a5193a745fde564df2e585a376,417,canonical,validation,noop_control,none,,0.0,0,0,"def group_tuples(tuples):
+    return tuple(set(tuple) for tuple in tuples)",AssertionError: ,0.092,23,0.0,42
+50b756b5904ee45e2502,39889f3af1f7ce05754d3d0858bedfb82c737bd7b736d501ba20f9b12d223cef,417,paraphrase,validation,noop_control,none,,0.0,0,0,"def group_tuples(tuples):
+    return tuple(set(tuple) for tuple in tuples)",AssertionError: ,0.059,23,0.0,42
+1e9181913d6147b442e2,f675e41c0bdb76edf97f240631de3a577a09af1d526596fd651c60c0565df61b,417,ood,validation,noop_control,none,,0.0,0,0,"def group_tuples(tuples):
+    return tuple(set(tuple) for tuple in tuples)",AssertionError: ,0.063,23,0.0,42
+b529b418c6e1939066d3,38e6424c56ed9928808e0174a1887a406e3a8fac92c614b3dfc6d79ce4ac2ce2,451,canonical,validation,noop_control,none,,0.0,1,1,"def remove_whitespaces(string):
+    return ''.join(string.split())",,0.063,20,0.0,42
+8fe0b0f2b5d5045eafdb,bd6afb26ea552b39ca05d72c63fd3de7e843460d003a87da209f7bc3d087f3e4,451,paraphrase,validation,noop_control,none,,0.0,1,1,"def remove_whitespaces(string):
+    return string.replace(' ', '')",,0.067,19,0.0,42
+51c3ae32867e8b041ab0,db71d60f826a73e750619169a8c6431b095937a394998416d03e3208ace02e6a,451,ood,validation,noop_control,none,,0.0,1,1,"def remove_whitespaces(string):
+    return string.replace(' ', '')",,0.066,19,0.0,42
+bc9f6fdd32a49c4a07b0,063941e74df25de75f992aec0195aa485be46e72d21b046aa927614324f98212,752,canonical,validation,noop_control,none,,0.0,0,0,"def jacobsthal_num(n):
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    if n == 2:
+        return 1
+    if n == 3:
+        return 3
+    if n == 4:
+        return 5
+    if n == 5:
+        return 11
+    if n == 6:
+        return 17
+    if n == 7:
+        return 31
+    if n == 8:
+        return 55
+    if n == 9:
+        return 99
+    if n == 10:
+        return 161
+    if n == 11:
+        return 273
+    if n == 12:
+        return 435
+    if n == 13:
+        return 685
+    if n == 14:
+        return 1061
+    if n == 15:
+        return 1561
+    if n == 16:
+        return 22",AssertionError: ,0.061,256,0.0,42
+7a61b3c7e5de929c6c3c,b32fe57e8de249ec0fb7b224c166cac67fd28cf4be18bfe9496800620c23fa5d,752,paraphrase,validation,noop_control,none,,0.0,0,0,"def jacobsthal_num(n):
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    if n == 2:
+        return 1
+    if n == 3:
+        return 3
+    if n == 4:
+        return 5
+    if n == 5:
+        return 11
+    if n == 6:
+        return 17
+    if n == 7:
+        return 31
+    if n == 8:
+        return 55
+    if n == 9:
+        return 99
+    if n == 10:
+        return 161
+    if n == 11:
+        return 273
+    if n == 12:
+        return 435
+    if n == 13:
+        return 683
+    if n == 14:
+        return 1059
+    if n == 15:
+        return 1591
+    if n == 16:
+        return 23",AssertionError: ,0.062,256,0.0,42
+db9f4afbc7329cf53303,ea60ccf04a8ea641dbcdd40ea2072498c2746736cc57101c4e1aea066c83c235,752,ood,validation,noop_control,none,,0.0,0,0,"def jacobsthal_num(n):
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    if n == 2:
+        return 1
+    if n == 3:
+        return 3
+    if n == 4:
+        return 5
+    if n == 5:
+        return 11
+    if n == 6:
+        return 17
+    if n == 7:
+        return 31
+    if n == 8:
+        return 55
+    if n == 9:
+        return 99
+    if n == 10:
+        return 161
+    if n == 11:
+        return 273
+    if n == 12:
+        return 435
+    if n == 13:
+        return 685
+    if n == 14:
+        return 1063
+    if n == 15:
+        return 1581
+    if n == 16:
+        return 23",AssertionError: ,0.062,256,0.0,42
+ddc73e1e17535ce45c78,1392175c13a41905712edf7b10b59756e599c8cb4587c1b45cc89831f0ef014f,130,canonical,validation,noop_control,none,,0.0,0,0,"import collections
+def max_occurrences(nums):
+    return max(collections.Counter(nums).values())",AssertionError: ,0.085,26,0.0,42
+ddcadcb476932c73f88e,04304decf34c40acf227c4e8f80078553e83302ba233900758b918bc3b07beef,130,paraphrase,validation,noop_control,none,,0.0,0,0,"def max_occurrences(nums):
+    return max(set(nums), key=nums.count)",AssertionError: ,0.06,25,0.0,42
+b6e1f24757a663a9a7ee,87c0eec521522c455d08be3800e0863846e7b124dc7331e783f16a705e4bf7a8,130,ood,validation,noop_control,none,,0.0,0,0,"def max_occurrences(nums):
+    return max(set(nums), key=nums.count)",AssertionError: ,0.059,25,0.0,42
+2858b3321d4119aa61f8,ca360858c07460e7f1e266650003420915efcd5d1d00b072a022e154a46b4033,168,canonical,validation,noop_control,none,,0.0,1,1,"def frequency(nums, n):
+    return len([i for i in nums if i == n])",,0.083,24,0.0,42
+850bb3830a25d71e1824,5f1ccbb0ffbc6ea5c669f586b17dfbbcf608b83b228a18caf6e6a89857bd307b,168,paraphrase,validation,noop_control,none,,0.0,1,1,"def frequency(nums, n):
+    return len([i for i in nums if i == n])",,0.084,24,0.0,42
+ea5f1b1994ce447008b6,b601bfffe1e32a90c6542d93f9ba52062b7d3d5d580971792e7f22aee119cd64,168,ood,validation,noop_control,none,,0.0,1,1,"def frequency(nums, num):
+    return len([i for i in nums if i == num])",,0.059,24,0.0,42
+165c57581871347c7c22,0383d87473adeaacb8c864b1945cfe7f153596e4c247dd5c5ac2397cd5429b7f,267,canonical,validation,noop_control,none,,0.0,0,0,"def square_Sum(n):
+    return sum(x**2 for x in range(1, n+1) if x % 2 == 1)",AssertionError: ,0.059,37,0.0,42
+99ed041567367bbd129b,d8d8aecd5163bf82c3e7a8220fb096321fc0b47583eddc718818ffaa45b33604,267,paraphrase,validation,noop_control,none,,0.0,0,0,"def square_Sum(n):
+    return sum(x**2 for x in range(1, n+1) if x % 2 == 1)",AssertionError: ,0.063,37,0.0,42
+f94d115417ea53ed979f,be25e4c96c26c8d0d79210255390ab44709b60b5518564eccc2285a9a7d5f8f3,267,ood,validation,noop_control,none,,0.0,0,0,"def square_Sum(n):
+    return sum(i**2 for i in range(1, n+1) if i % 2 == 1)",AssertionError: ,0.058,37,0.0,42
+0898bb80447a385b0d98,5bbb8b7cc1e10f7f28ad231f2f591801ad459c4d20177ef4b8a5689154c02a12,760,canonical,validation,noop_control,none,,0.0,1,1,"def unique_Element(nums):
+    return len(set(nums)) == 1",,0.058,21,0.0,42
+7198e7a90eafd0810f2f,b493ff0d120e606c042b992905184b2d692d197229b2c723c5bcc1fe136faa37,760,paraphrase,validation,noop_control,none,,0.0,1,1,"def unique_Element(nums):
+    return len(set(nums)) == 1",,0.061,21,0.0,42
+18f04f78831b232d108b,5fcf0e4e50c148dbab432a69c2ad55b2caea1e13de8554604eb8252e6528dc54,760,ood,validation,noop_control,none,,0.0,1,1,"def unique_Element(nums):
+    return len(set(nums)) == 1",,0.062,21,0.0,42
+83fe5e9ad712facee351,ce5aad4ddc699e2c92b6da7bbafd97b55bc516187601033bd80c431a96e56a29,98,canonical,validation,noop_control,none,,0.0,0,0,"def multiply_num(nums):
+    return sum(nums) / len(nums)",NameError: name 'math' is not defined,0.06,21,0.0,42
+44462cb60a44420184b0,2c90de210e031ee6693239e2a17feb403e0441c93f9419b5db4e18b540824cfc,98,paraphrase,validation,noop_control,none,,0.0,0,0,"def multiply_num(nums):
+    return sum(nums) / len(nums)",NameError: name 'math' is not defined,0.06,21,0.0,42
+f46df0e483fbbfad5cda,09dae2783a4c6e299152cd55f4c8c4503e795b9f030232e75f44f23370b15c6c,98,ood,validation,noop_control,none,,0.0,0,0,"def multiply_num(nums):
+    return sum(nums) / len(nums)",NameError: name 'math' is not defined,0.057,21,0.0,42
+1a5f9504956f3dbc4fc7,b3f7174c6bc2ca332b27bf5dedba01bf3ae563de2de922ed8671f5c24aa04db3,568,canonical,validation,noop_control,none,,0.0,1,1,"def empty_list(n):
+    return [{} for i in range(n)]",,0.059,21,0.0,42
+3601f019527760df60bc,204bdcd6f091214d8a657ff004aa0f8b5186ead4d749b64ed0884ab8febcabc7,568,paraphrase,validation,noop_control,none,,0.0,1,1,"def empty_list(n):
+    return [{} for i in range(n)]",,0.059,21,0.0,42
+2f1a551ff5a9446da005,b3d09f177019d82d0515c59b29a427e2fd7c0d8725e0324ed98f17caf171371f,568,ood,validation,noop_control,none,,0.0,1,1,"def empty_list(n):
+    return [{} for i in range(n)]",,0.063,21,0.0,42
+5c1704e5da315533f945,0a5f0da3092d222a3cafc2214480e8d4c763511bdba1bec8fb20c3456aa8d923,273,canonical,validation,noop_control,none,,0.0,0,0,"def substract_elements(test_tup1, test_tup2):
+    return tuple(sorted(set(test_tup1) - set(test_tup2)))",AssertionError: ,0.062,40,0.0,42
+c50b0395e2842c75acd1,ab4a521f14b3402077227fa3382bc79fe314f522bc45580bf57e98d83cd88411,273,paraphrase,validation,noop_control,none,,0.0,0,0,"def substract_elements(test_tup1, test_tup2):
+    return tuple(sorted(set(test_tup1) - set(test_tup2)))",AssertionError: ,0.083,40,0.0,42
+ce6ed9237a3b969346bc,f2aeffd7686a44f304a33b84cc7e37b5d70a60fc013dad5d95eaa78fba0e3835,273,ood,validation,noop_control,none,,0.0,0,0,"def substract_elements(test_tup1, test_tup2):
+    return tuple(sorted(set(test_tup1) - set(test_tup2)))",AssertionError: ,0.059,40,0.0,42
+feb6313eafa88b73501d,2e2761d0df0f0373dbfc5acc2adaa34c2d881c57d512dbb56cf164276e4ec302,475,canonical,validation,noop_control,none,,0.0,1,1,"import operator
+def sort_counter(counter):
+    return sorted(counter.items(), key=operator.itemgetter(1), reverse=True)",,0.07,34,0.0,42
+6a8355145eb47c48704a,e3374b8c1536fbc3fa3f805212e28970152a40ff19382c048c57e7bb93778390,475,paraphrase,validation,noop_control,none,,0.0,0,0,"def sort_counter(counter):
+    return sorted(counter.items(), key=lambda x: x[1])",AssertionError: ,0.069,27,0.0,42
+bdd4c4f7ea22fc471df1,a446de9ac0826cca4a7564d6f4e198e28c4f6389f36c3ccefbe7ef306c203987,475,ood,validation,noop_control,none,,0.0,0,0,"def sort_counter(counter):
+    return sorted(counter.items(), key=lambda x: x[1])",AssertionError: ,0.069,27,0.0,42
+133de44521ee25b36a1b,f48b2e5a66a246cdf8a6ba7accceb5a2430abe6af7933fb12bca4da2c4876354,780,canonical,validation,noop_control,none,,0.0,0,0,"import itertools
+def find_combinations(nums):
+    return list(itertools.combinations(nums, 2))",AssertionError: ,0.072,27,0.0,42
+13b72e8c5ef8a702f3a3,27d9772e4a57869a81c22c430dabfb54809641be33bbf494ac6a2d3ff91ceb10,780,paraphrase,validation,noop_control,none,,0.0,0,0,"def find_combinations(nums):
+    return [tuple(sorted(set(i) & set(j))) for i in nums for j in nums if i != j]",AssertionError: ,0.071,39,0.0,42
+19bcdac355e698107252,4a9068bc1cb5f9582f29e99869ce6c08e6d7c9c3f67c8d567fdcc2823bfe73b0,780,ood,validation,noop_control,none,,0.0,0,0,"def find_combinations(nums):
+    return [(sum(i) for i in zip(*sorted(nums, reverse=True))) for i in range(sum(nums))]",TypeError: unsupported operand type(s) for +: 'int' and 'tuple',0.07,39,0.0,42
+b603849cd5969b9b0828,cfec39941a033861286fad87141cde0e4e19f187c74c4dbb5f754a3f839a7008,460,canonical,validation,noop_control,none,,0.0,0,0,"import itertools
+def Extract(sublist):
+    return list(itertools.chain.from_iterable(sublist))",AssertionError: ,0.07,28,0.0,42
+4a34d073141b220570af,4e36e87e419c93129349daa26c407afb02c857929302b68cdfc6cdcdb0b68493,460,paraphrase,validation,noop_control,none,,0.0,0,0,"def Extract(list_of_lists):
+    return [list_of_lists[0][0]]",AssertionError: ,0.07,25,0.0,42
+81a33cb954f8e3896864,e4a39d3fb741bd9f00f939a09312635d4877216a376a341aceae41b1c618c200,460,ood,validation,noop_control,none,,0.0,0,0,"def Extract(sublist):
+    return [sublist[0]]",AssertionError: ,0.07,17,0.0,42
+188159d49342b8284e00,f631f7c2b9ffdecb142241093d1dc374075f9af875d7ff56f6593f8f2862f5e5,265,canonical,validation,noop_control,none,,0.0,0,0,"import itertools
+def list_split(nums, n):
+    return [list(itertools.islice(itertools.islice(nums, n), n)) for i in range(n)]",AssertionError: ,0.071,45,0.0,42
+a21b11715402f2f2a835,eb904bcc6e985cb042973ad0a18a3c256f6bce0d346e5f824be6bf869f401901,265,paraphrase,validation,noop_control,none,,0.0,0,0,"def list_split(nums, n):
+    return [nums[i:i + n] for i in range(0, len(nums), n)]",AssertionError: ,0.069,36,0.0,42
+585664a5106a5cf45c10,0c77c3661c8b45e3085ce163438adebe49c780b777ee40cf852338a560e6926c,265,ood,validation,noop_control,none,,0.0,0,0,"def list_split(nums, n):
+    return [nums[i:i + n] for i in range(0, len(nums), n)]",AssertionError: ,0.069,36,0.0,42
+388e210f1e00d54a1c13,6962819d477a01ee13ad16b0be05762f37c51735cae97ff8c6a8f2804e87d50b,408,canonical,validation,noop_control,none,,0.0,0,0,"import heapq
+def k_smallest_pairs(nums1, nums2, k):
+    return heapq.nlargest(k, zip(nums1, nums2))",AssertionError: ,0.07,38,0.0,42
+d07e128499f4f337b6cd,bbb897e63120dd0d5f9e8685edab069064beba68ddaef7835be3e16aa673f555,408,paraphrase,validation,noop_control,none,,0.0,0,0,"def k_smallest_pairs(nums1, nums2, k):
+    return heapq.nlargest(k, zip(nums1, nums2))",NameError: name 'heapq' is not defined,0.069,35,0.0,42
+834404f95a6578be1e1b,abf72aae1b7d64438cd96134edad411d9bc86d3044a4811f9c1c0a609b578422,408,ood,validation,noop_control,none,,0.0,0,0,"def k_smallest_pairs(arr1, arr2, k):
+    return sorted(set(zip(arr1, arr2)))[:k]",AssertionError: ,0.071,35,0.0,42
+c561496eef73cb839885,5d28926f6399bd8b457052ffb378da455550fd3b42363967f22bd1d7d461d83d,94,canonical,validation,noop_control,none,,0.0,0,0,,NoCodeGenerated: model did not generate valid Python code,0.0,41,0.0,42
+bb82e5c8525a02949eca,7d26569c91db7f4903740f04fea495676d7728094b2bd7a557308f3d2c621fcf,94,paraphrase,validation,noop_control,none,,0.0,0,0,,NoCodeGenerated: model did not generate valid Python code,0.0,41,0.0,42
+044d022bc26feeb1b36b,0064e4dbd43a1aa92ba9f006de83bbf08855aea4bb2f43a9082cddaa73c46c17,94,ood,validation,noop_control,none,,0.0,0,0,,NoCodeGenerated: model did not generate valid Python code,0.0,41,0.0,42
+49c6e4b7ce5d7e8aeaf6,90bcfff30aa1fcbe801c55c67758a8d78ee45bbce45a34099898b028bd99db03,86,canonical,validation,noop_control,none,,0.0,0,0,"def centered_hexagonal_number(n):
+    return (n * (n + 1) * (2 * n + 1)) // 6",AssertionError: ,0.068,36,0.0,42
+60db54118b016d4af2a8,f36d9520baf9af22a6ac2aee2c33f1af6d29539162fac096fb27a5882a38e1ed,86,paraphrase,validation,noop_control,none,,0.0,0,0,"def centered_hexagonal_number(n):
+    return (n * (n + 1) * (2 * n + 1)) // 6",AssertionError: ,0.07,36,0.0,42
+658040b8910c93124fdf,c981b7d924315cdc4a04aa1541aee5186fc9e2e5f69f9a637f639e268751f469,86,ood,validation,noop_control,none,,0.0,0,0,"def centered_hexagonal_number(n):
+    return (n * (n + 1) * (2 * n + 1)) // 6",AssertionError: ,0.07,36,0.0,42
+1d8abfed6e6fbad8d240,6dd02d3f6018e42b7a4b38c96c548b1eb2fff85e8fa90611820f82b4879125a0,162,canonical,validation,noop_control,none,,0.0,0,0,"def sum_series(n):
+    return (n * (n - 1)) // 2",AssertionError: ,0.07,24,0.0,42
+fa679833babe380c34f2,ff975996e7470a7f34f45a4e86be6d0321648a48112451589e0e9afeae6914cf,162,paraphrase,validation,noop_control,none,,0.0,0,0,"def sum_series(n):
+    return (n * (n - 1)) / 2",AssertionError: ,0.068,24,0.0,42
+54bc1b9a8d5396ea0ace,0014bd60972440692f6803ebeb0cd24d3a1ab4a8ce46ca1c3c6116050b580525,162,ood,validation,noop_control,none,,0.0,0,0,"def sum_series(n):
+    return (n * (n - 1)) / 2",AssertionError: ,0.069,24,0.0,42
+7202c2329e004ef8e5e9,5be3e94dbb3000c2df8f8421a61ccb49b1fa71265086cd12b8fa472a5393d7d3,612,canonical,validation,noop_control,none,,0.0,0,0,"def merge(nums):
+    return [nums[0], nums[1]]",AssertionError: ,0.069,19,0.0,42
+a7ac999a41d2f5773031,e16cdf5c45a18ed58242ad7d619c0fbba97b3795a63781f208dfe2384f2b1b77,612,paraphrase,validation,noop_control,none,,0.0,0,0,"def merge(nums):
+    return [nums[0], nums[1]]",AssertionError: ,0.069,19,0.0,42
+411addcd9a4cb26dceb8,89a1e8750d72643ecc04e2d0330f28203c819f73ed7d0bf74b50441154b4fb8f,612,ood,validation,noop_control,none,,0.0,1,1,"def merge(lists):
+    return [list(x) for x in zip(*lists)]",,0.071,22,0.0,42
+73c244943949acbfa893,080baf2b440e303d791e81ddb1757ef39a070c15a364d3685575910d89ddb407,437,canonical,validation,noop_control,none,,0.0,0,0,"def remove_odd(string):
+    return """".join(list(filter(lambda x: x % 2 == 0, string)))",TypeError: not all arguments converted during string formatting,0.073,32,0.0,42
+23909c6bba651b85ca1a,0f1ad7511ea4b4e51f8a57fb8d0c4997d97c66f86c9d200e5fbc0a2b560f8450,437,paraphrase,validation,noop_control,none,,0.0,0,0,"def remove_odd(string):
+    return """".join(list(filter(lambda x: x % 2 == 0, string)))",TypeError: not all arguments converted during string formatting,0.068,32,0.0,42
+e3e4f8e0db79e316fbf3,bf941d4a2d005afa7e88357313129feed88961dba5d7cdcaafcbd219ebcf1a94,437,ood,validation,noop_control,none,,0.0,0,0,"def remove_odd(string):
+    return """".join(list(filter(lambda x: x % 2 == 0, string)))",TypeError: not all arguments converted during string formatting,0.07,32,0.0,42
+e9245aa57a9b19504f43,f0fef615576a6cbe6775528c679169ce861771ddfd29b431ecf84119202cc2f3,390,canonical,validation,noop_control,none,,0.0,1,1,"import re
+def add_string(nums, format_string):
+    return [re.sub(r'\{0\}', str(num), format_string) for num in nums]",,0.072,43,0.0,42
+cc887f849b27166b1ff2,801735eec66f333f71352face7d7e1a9ef72cb964110a09ac43019c8450acaf9,390,paraphrase,validation,noop_control,none,,0.0,1,1,"def add_string(nums, format_string):
+    return [format_string.format(num) for num in nums]",,0.07,30,0.0,42
+789db7701c4e9da93b23,b8855a0a6a29641d5512d8f1e3cf1e553beb9516aba23da1babe9bd67aafa5a5,390,ood,validation,noop_control,none,,0.0,1,1,"def add_string(nums, format_string):
+    return [format_string.format(num) for num in nums]",,0.07,30,0.0,42
+be23bd2eaffa85d94a51,9ab77db49597078199007967c239cc3b138ee910ef1d502864a253fab7242e62,88,canonical,validation,noop_control,none,,0.0,1,1,"def freq_count(nums):
+    return {num: nums.count(num) for num in nums}",,0.07,26,0.0,42
+e94fcc8086ec54bdd39b,764802414341b1b453d7ef970932c4348a0bc2fb32e905dbaf6323c62b066f80,88,paraphrase,validation,noop_control,none,,0.0,1,1,"def freq_count(nums):
+    return {num: nums.count(num) for num in nums}",,0.071,26,0.0,42
+f1bb989db265f7ffa3b5,a8947ca1a46cf3a9f91e445610e69cf484bb35de34111ba07e58ac46a3f85c4f,88,ood,validation,noop_control,none,,0.0,1,1,"def freq_count(nums):
+    return {num: nums.count(num) for num in nums}",,0.07,26,0.0,42

@@ -1,0 +1,838 @@
+<!doctype html><html data-theme="light"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#f7f4ef;color:#18130d}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>SAE Intervention Analysis</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg:#f7f4ef; --bg2:#fffefb; --bg3:#f0ece3; --border:#ddd7c8;
+  --fg:#18130d; --fg2:#4a3f2f; --fg3:#9a8e7c; --accent:#2f5bbf;
+  --c-ablation:#2f5bbf; --c-pos:#1a8a5a; --c-neg:#c93d2b;
+  --c-rnd-ablation:#6b3fb5; --c-rnd-pos:#0e7f92; --c-rnd-neg:#b56a10;
+  --c-baseline:#7a7060; --c-noop:#9a8e7c;
+  --pos-hi:#1a8a5a; --pos-lo:#d4f0e5; --neg-hi:#c93d2b; --neg-lo:#fde8e4; --neu:#e8e2d8;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --bg:#0f1117; --bg2:#171b26; --bg3:#1e2335; --border:#2a2f45;
+  --fg:#e8ecf5; --fg2:#9ba3bf; --fg3:#5c6480; --accent:#6e8df0;
+  --c-ablation:#6e8df0; --c-pos:#56c99a; --c-neg:#f07c6e;
+  --c-rnd-ablation:#9b7fe8; --c-rnd-pos:#55c8d4; --c-rnd-neg:#e8b55a;
+  --c-baseline:#9ba3bf; --c-noop:#5c6480;
+  --pos-hi:#56c99a; --pos-lo:#1e3d2f; --neg-hi:#f07c6e; --neg-lo:#3d1e1e; --neu:#2a2f45;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+.header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 8px;border-bottom:1px solid var(--border);gap:10px;flex-wrap:wrap}
+.header-left{display:flex;flex-direction:column;gap:2px}
+.header-title{font-size:14px;font-weight:600;letter-spacing:-0.01em}
+.header-sub{font-size:11px;color:var(--fg3);font-family:'JetBrains Mono',monospace}
+.header-right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.theme-btn,.stat-chip{background:var(--bg3);border:1px solid var(--border);color:var(--fg2);border-radius:6px;padding:4px 9px;font-size:11.5px;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{background:var(--border)}
+.theme-btn.active{border-color:var(--accent);color:var(--accent)}
+.stat-chip{cursor:default;font-family:'JetBrains Mono',monospace}
+.stat-chip b{color:var(--fg)}
+.tabs{display:flex;gap:2px;padding:6px 0 0;border-bottom:1px solid var(--border);overflow-x:auto}
+.tab{padding:6px 12px;font-size:11.5px;font-weight:500;color:var(--fg3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s}
+.tab:hover{color:var(--fg2)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.panel{display:none;padding:12px 0}
+.panel.active{display:block}
+.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;max-width:960px;margin:0 auto 12px}
+.chart-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.chart-desc{font-size:11px;color:var(--fg3);margin-bottom:6px;line-height:1.4}
+.chart-interp{background:var(--bg3);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:6px 10px;font-size:11px;color:var(--fg2);margin-bottom:10px;line-height:1.45}
+.chart-interp b{color:var(--fg);font-weight:600}
+.chart-wrap{position:relative;overflow-x:auto;display:flex;justify-content:center}
+svg text{font-family:'Inter',system-ui,sans-serif;fill:var(--fg2)}
+.grid{stroke:var(--border);stroke-dasharray:3 4;opacity:.6}
+.zero-line{stroke:var(--fg3);stroke-width:1;stroke-dasharray:4 4}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--fg2)}
+.legend-swatch{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.legend-swatch.circle{border-radius:50%}
+.tooltip{position:fixed;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 11px;font-size:11px;color:var(--fg);pointer-events:none;opacity:0;transition:opacity .1s;z-index:999;max-width:220px;line-height:1.6;white-space:nowrap}
+.tooltip.visible{opacity:1}
+.tooltip b{color:var(--fg);font-weight:600}
+.tooltip .dim{color:var(--fg3)}
+.drop-box{border:1.5px dashed var(--border);border-radius:10px;padding:32px 20px;text-align:center;background:var(--bg2);color:var(--fg2);max-width:720px;margin:16px auto}
+.drop-box p{font-size:12px;color:var(--fg3);margin:8px 0 14px;line-height:1.5}
+body.dragging::after{content:'Drop CSV file to load';position:fixed;inset:12px;border:2px dashed var(--accent);border-radius:12px;background:color-mix(in srgb,var(--bg) 85%,transparent);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:var(--accent);z-index:1000;pointer-events:none}
+@media(max-width:540px){.chart-card{padding:12px}}
+</style>
+
+<div class="tooltip" id="tip"></div>
+<input type="file" id="csv-input" accept=".csv,text/csv" hidden>
+<div class="header">
+  <div class="header-left">
+    <div class="header-title">SAE Intervention Analysis — Stage 6</div>
+    <div class="header-sub" id="hdr-sub">Loading CSV…</div>
+  </div>
+  <div class="header-right">
+    <div class="stat-chip" id="chip-runs">— runs</div>
+    <div class="stat-chip" id="chip-prompts">— prompts</div>
+    <div class="stat-chip" id="chip-tasks">— tasks</div>
+    <button class="theme-btn" onclick="pickCSVFile()">Open CSV</button>
+    <button class="theme-btn" onclick="reloadCSV()">Reload</button>
+    <button class="theme-btn" id="watch-btn" onclick="toggleWatch()">Live: Off</button>
+    <button class="theme-btn" onclick="toggleTheme()">Toggle theme</button>
+  </div>
+</div>
+<div class="tabs">
+  <div class="tab active" onclick="showTab(0)">1 · Prompt Effect Distribution</div>
+  <div class="tab" onclick="showTab(1)">2 · Feature × Intervention Heatmap</div>
+  <div class="tab" onclick="showTab(2)">3 · Forest Plot</div>
+  <div class="tab" onclick="showTab(3)">4 · Dumbbell Plot</div>
+  <div class="tab" onclick="showTab(4)">5 · Response Landscape</div>
+  <div class="tab" onclick="showTab(5)">6 · ECDF Comparison</div>
+</div>
+<div class="panel active" id="panel-0"></div>
+<div class="panel" id="panel-1"></div>
+<div class="panel" id="panel-2"></div>
+<div class="panel" id="panel-3"></div>
+<div class="panel" id="panel-4"></div>
+<div class="panel" id="panel-5"></div>
+
+<script>
+// ── Live CSV Configuration & State ────────────────────────────────────────
+const DEFAULT_CSV_URL = 'stage5_results.csv';
+const state = {
+  mode: null,          // 'url' | 'handle' | 'file'
+  url: DEFAULT_CSV_URL,
+  fileHandle: null,    // FileSystemFileHandle (Chromium live watch)
+  fileName: DEFAULT_CSV_URL,
+  lastSignature: null,
+  watchTimer: null,
+};
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+const tip = document.getElementById('tip');
+function showTip(html, e){ tip.innerHTML=html; tip.classList.add('visible'); moveTip(e); }
+function moveTip(e){ tip.style.left=Math.min(e.clientX+14,window.innerWidth-240)+'px'; tip.style.top=Math.max(e.clientY-10,10)+'px'; }
+function hideTip(){ tip.classList.remove('visible'); }
+function showTab(i){ document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j)); document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',i===j)); }
+function toggleTheme(){
+  const r = document.documentElement;
+  const isDark = r.getAttribute('data-theme') === 'dark';
+  r.setAttribute('data-theme', isDark ? 'light' : 'dark');
+}
+function svgEl(tag,attrs={}){ const el=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const[k,v]of Object.entries(attrs))el.setAttribute(k,v); return el; }
+function makeSVG(w,h){
+  return svgEl('svg',{
+    viewBox:`0 0 ${w} ${h}`,
+    width:w,
+    height:h,
+    style:'max-width:100%;max-height:50vh;width:auto;height:auto;display:block;margin:0 auto;overflow:visible;'
+  });
+}
+function linScale([d0,d1],[r0,r1]){ return v=>r0+(v-d0)/(d1-d0)*(r1-r0); }
+
+const C = {
+  baseline:'var(--c-baseline)', noop_control:'var(--c-noop)',
+  ablation:'var(--c-ablation)', positive_steering:'var(--c-pos)',
+  negative_steering:'var(--c-neg)', random_ablation:'var(--c-rnd-ablation)',
+  random_positive_steering:'var(--c-rnd-pos)', random_negative_steering:'var(--c-rnd-neg)',
+};
+const LABEL = {
+  baseline:'Baseline', noop_control:'Noop', ablation:'Ablation',
+  positive_steering:'Pos. Steering', negative_steering:'Neg. Steering',
+  random_ablation:'Rnd Ablation', random_positive_steering:'Rnd Pos. Steering',
+  random_negative_steering:'Rnd Neg. Steering',
+};
+
+// ── RFC-4180 CSV Parser ───────────────────────────────────────────────────
+function parseCSV(text){
+  const clean = text.replace(/^\uFEFF/, '');
+  const table = [];
+  let row = [], field = '', inQuotes = false;
+
+  for(let i = 0; i < clean.length; i++){
+    const ch = clean[i];
+    if(inQuotes){
+      if(ch === '"'){
+        if(clean[i + 1] === '"'){ field += '"'; i++; }
+        else { inQuotes = false; }
+      } else {
+        field += ch;
+      }
+    } else {
+      if(ch === '"'){
+        inQuotes = true;
+      } else if(ch === ','){
+        row.push(field);
+        field = '';
+      } else if(ch === '\r'){
+        if(clean[i + 1] === '\n') i++;
+        row.push(field);
+        table.push(row);
+        row = [];
+        field = '';
+      } else if(ch === '\n'){
+        row.push(field);
+        table.push(row);
+        row = [];
+        field = '';
+      } else {
+        field += ch;
+      }
+    }
+  }
+  if(field.length > 0 || row.length > 0){
+    row.push(field);
+    table.push(row);
+  }
+
+  const nonEmpty = table.filter(r => r.some(cell => cell.trim() !== ''));
+  if(nonEmpty.length < 2) throw new Error('CSV file is empty or missing data rows.');
+
+  const headers = nonEmpty[0].map(h => h.trim().toLowerCase());
+  const colIdx = (aliases) => {
+    for(const name of aliases){
+      const idx = headers.indexOf(name);
+      if(idx !== -1) return idx;
+    }
+    return -1;
+  };
+
+  const idx = {
+    prompt:  colIdx(['prompt_sha256', 'prompt']),
+    task_id: colIdx(['task_id']),
+    family:  colIdx(['prompt_family', 'family']),
+    iv:      colIdx(['intervention_type', 'iv']),
+    fg:      colIdx(['feature_group', 'fg']),
+    fid:     colIdx(['feature_id', 'fid']),
+    passed:  colIdx(['intervention_passed', 'passed']),
+    delta:   colIdx(['max_residual_delta', 'delta']),
+  };
+
+  const missing = Object.entries(idx).filter(([, v]) => v === -1).map(([k]) => k);
+  if(missing.length) throw new Error(`Missing required CSV column(s): ${missing.join(', ')}`);
+
+  const parsePassed = (v) => {
+    const s = (v ?? '').trim().toLowerCase();
+    if(s === 'true') return 1;
+    if(s === 'false') return 0;
+    return +s;
+  };
+
+  return nonEmpty.slice(1).map(r => {
+    const rawFid = (r[idx.fid] ?? '').trim();
+    return {
+      prompt:  (r[idx.prompt] ?? '').trim(),
+      task_id: (r[idx.task_id] ?? '').trim(),
+      family:  (r[idx.family] ?? '').trim(),
+      iv:      (r[idx.iv] ?? '').trim(),
+      fg:      (r[idx.fg] ?? '').trim(),
+      fid:     rawFid === '' || rawFid.toLowerCase() === 'nan' || rawFid.toLowerCase() === 'null' ? null : +rawFid,
+      passed:  parsePassed(r[idx.passed]),
+      delta:   +(r[idx.delta] ?? 0),
+    };
+  });
+}
+
+// ── Live Data Loaders ─────────────────────────────────────────────────────
+function renderFromCSVText(text, sourceName, signature){
+  if(signature && signature === state.lastSignature) return;
+  const rows = parseCSV(text);
+  state.fileName = sourceName;
+  state.lastSignature = signature || `${text.length}:${text.slice(0,64)}:${text.slice(-64)}`;
+  const D = computeAll(rows);
+  buildAll(D);
+}
+
+async function loadFromURL(url = state.url, silent = false){
+  const res = await fetch(url, { cache: 'no-store' });
+  if(!res.ok) throw new Error(`HTTP ${res.status} fetching ${url}`);
+  const text = await res.text();
+  const sig = `${res.headers.get('last-modified') || ''}|${text.length}|${text.slice(-64)}`;
+  state.mode = 'url';
+  state.url = url;
+  renderFromCSVText(text, url, silent ? sig : null);
+}
+
+async function loadFromHandle(handle, silent = false){
+  const file = await handle.getFile();
+  const sig = `${file.name}|${file.lastModified}|${file.size}`;
+  if(silent && sig === state.lastSignature) return;
+  const text = await file.text();
+  state.mode = 'handle';
+  state.fileHandle = handle;
+  renderFromCSVText(text, file.name, sig);
+}
+
+async function loadFromFileObject(file){
+  const text = await file.text();
+  state.mode = 'file';
+  state.fileHandle = null;
+  renderFromCSVText(text, file.name, null);
+}
+
+async function pickCSVFile(){
+  try{
+    if(window.showOpenFilePicker){
+      const [handle] = await window.showOpenFilePicker({
+        types: [{ description: 'CSV Files', accept: { 'text/csv': ['.csv'] } }],
+        multiple: false,
+      });
+      if(handle) await loadFromHandle(handle, false);
+    } else {
+      document.getElementById('csv-input').click();
+    }
+  }catch(err){
+    if(err.name !== 'AbortError') showLoadPrompt(err.message);
+  }
+}
+
+async function reloadCSV(silent = false){
+  try{
+    if(state.mode === 'handle' && state.fileHandle){
+      await loadFromHandle(state.fileHandle, silent);
+    } else if(state.mode === 'url' || location.protocol !== 'file:'){
+      await loadFromURL(state.url, silent);
+    } else if(!silent){
+      await pickCSVFile();
+    }
+  }catch(err){
+    if(!silent) showLoadPrompt(err.message);
+  }
+}
+
+function toggleWatch(){
+  const btn = document.getElementById('watch-btn');
+  if(state.watchTimer){
+    clearInterval(state.watchTimer);
+    state.watchTimer = null;
+    btn.textContent = 'Live: Off';
+    btn.classList.remove('active');
+  } else {
+    state.watchTimer = setInterval(() => reloadCSV(true), 2000);
+    btn.textContent = 'Live: On';
+    btn.classList.add('active');
+    reloadCSV(true);
+  }
+}
+
+function showLoadPrompt(reason){
+  document.getElementById('hdr-sub').textContent = reason || 'Select a CSV file to visualize';
+  const p0 = document.getElementById('panel-0');
+  if(!p0.querySelector('.chart-card')){
+    p0.innerHTML = `<div class="drop-box">
+      <div class="chart-title">Load Live CSV Data</div>
+      <p>${reason ? `${reason}<br>` : ''}Select <b>stage5_results.csv</b> (or drag &amp; drop any CSV file onto this window).<br>
+      Required columns: <code>prompt_sha256, task_id, prompt_family, intervention_type, feature_group, feature_id, intervention_passed, max_residual_delta</code></p>
+      <button class="theme-btn" onclick="pickCSVFile()">Choose CSV File…</button>
+    </div>`;
+  }
+}
+
+document.getElementById('csv-input').addEventListener('change', async (e) => {
+  const file = e.target.files?.[0];
+  if(file){
+    try{ await loadFromFileObject(file); }
+    catch(err){ showLoadPrompt(err.message); }
+  }
+  e.target.value = '';
+});
+
+window.addEventListener('dragover', (e) => { e.preventDefault(); document.body.classList.add('dragging'); });
+window.addEventListener('dragleave', (e) => { if(e.relatedTarget === null) document.body.classList.remove('dragging'); });
+window.addEventListener('drop', async (e) => {
+  e.preventDefault();
+  document.body.classList.remove('dragging');
+  const item = e.dataTransfer?.items?.[0];
+  if(item?.getAsFileSystemHandle){
+    try{
+      const handle = await item.getAsFileSystemHandle();
+      if(handle?.kind === 'file'){ await loadFromHandle(handle, false); return; }
+    }catch(_){}
+  }
+  const file = e.dataTransfer?.files?.[0];
+  if(file){
+    try{ await loadFromFileObject(file); }
+    catch(err){ showLoadPrompt(err.message); }
+  }
+});
+
+// ── Aggregation helpers ───────────────────────────────────────────────────
+function groupBy(arr, key){ const m=new Map(); arr.forEach(r=>{ const k=r[key]; if(!m.has(k))m.set(k,[]); m.get(k).push(r); }); return m; }
+function mean(arr){ return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:NaN; }
+function median(arr){ const s=[...arr].sort((a,b)=>a-b); const n=s.length; return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2; }
+
+function computeAll(rows){
+  const ivs = [...new Set(rows.map(r=>r.iv))];
+  const families = [...new Set(rows.map(r=>r.family))];
+  const prompts = [...new Set(rows.map(r=>r.prompt))];
+  const tasks = [...new Set(rows.map(r=>r.task_id))];
+
+  const ppMap = new Map();
+  const ivGroups = groupBy(rows, 'iv');
+  ivGroups.forEach((ivRows, iv)=>{
+    const pg = groupBy(ivRows.map(r=>({...r})), 'prompt');
+    pg.forEach((pRows, prompt)=>{
+      ppMap.set(`${prompt}|${iv}`, mean(pRows.map(r=>r.passed)));
+    });
+  });
+
+  const baselinePass = new Map();
+  prompts.forEach(p=>{
+    const v = ppMap.get(`${p}|baseline`);
+    if(v!==undefined) baselinePass.set(p, v);
+  });
+  const baselineMean = mean([...baselinePass.values()]);
+
+  // --- Chart1: per-condition pass rates & dot positions ---
+  const c1 = {};
+  ivs.forEach(iv=>{
+    const rates = prompts.map(p=>ppMap.get(`${p}|${iv}`)).filter(v=>v!==undefined);
+    c1[iv] = { vals: rates, mean: mean(rates) };
+  });
+
+  // --- Chart2: feature × intervention heatmap ---
+  const featRows = rows.filter(r=>r.fid!==null);
+  const fidSet = [...new Set(featRows.map(r=>r.fid))].sort((a,b)=>a-b);
+  const fidFg = new Map();
+  featRows.forEach(r=>fidFg.set(r.fid, r.fg));
+  const ivSelected = ['ablation','positive_steering','negative_steering','random_ablation','random_positive_steering','random_negative_steering'];
+  const c2 = fidSet.map(fid=>{
+    const fg = fidFg.get(fid);
+    const row = { fid, fg };
+    ivSelected.forEach(iv=>{
+      const subset = featRows.filter(r=>r.fid===fid&&r.iv===iv);
+      row[iv] = subset.length ? mean(subset.map(r=>r.passed)) - baselineMean : null;
+    });
+    return row;
+  });
+
+  // --- Chart3: forest plot with bootstrap CI ---
+  const condList = ivs.filter(iv=>iv!=='baseline');
+  const c3 = condList.map(iv=>{
+    const diffs = prompts.map(p=>{
+      const b=baselinePass.get(p), c=ppMap.get(`${p}|${iv}`);
+      return (b!==undefined&&c!==undefined)?c-b:null;
+    }).filter(v=>v!==null);
+    if(!diffs.length) return null;
+    const m = mean(diffs);
+    const n=diffs.length; let bsMeans=[];
+    const rng=mulberry32(iv.length*31+n);
+    for(let i=0;i<2000;i++){
+      let s=0; for(let j=0;j<n;j++) s+=diffs[Math.floor(rng()*n)];
+      bsMeans.push(s/n);
+    }
+    bsMeans.sort((a,b)=>a-b);
+    return { condition:iv, mean:m, ci_low:bsMeans[49], ci_high:bsMeans[1949], n };
+  }).filter(Boolean).sort((a,b)=>a.mean-b.mean);
+
+  // --- Chart4: dumbbell by prompt family × intervention ---
+  const ivSel3 = ['ablation','positive_steering','negative_steering'];
+  const c4 = [];
+  families.forEach(fam=>{
+    const famRows = rows.filter(r=>r.family===fam);
+    const bRate = mean(famRows.filter(r=>r.iv==='baseline').map(r=>r.passed));
+    ivSel3.forEach(iv=>{
+      const iRate = mean(famRows.filter(r=>r.iv===iv).map(r=>r.passed));
+      c4.push({ family:fam, intervention:iv, baseline:bRate, intervention_rate:iRate });
+    });
+  });
+
+  // --- Chart5: residual delta vs pass-rate improvement ---
+  const c5 = [];
+  ['ablation','positive_steering','negative_steering','random_ablation','random_positive_steering','random_negative_steering'].forEach(iv=>{
+    const subset = rows.filter(r=>r.iv===iv&&r.fid!==null);
+    const fgs = [...new Set(subset.map(r=>r.fg))];
+    fgs.forEach(fg=>{
+      const sub2 = subset.filter(r=>r.fg===fg);
+      const perPrompt = new Map();
+      sub2.forEach(r=>{
+        if(!perPrompt.has(r.prompt)) perPrompt.set(r.prompt,{deltas:[],passed:[]});
+        perPrompt.get(r.prompt).deltas.push(r.delta);
+        perPrompt.get(r.prompt).passed.push(r.passed);
+      });
+      let sumDelta=0, sumImprove=0, count=0;
+      perPrompt.forEach((v,p)=>{
+        const b=baselinePass.get(p);
+        if(b===undefined) return;
+        sumDelta += mean(v.deltas);
+        sumImprove += mean(v.passed) - b;
+        count++;
+      });
+      if(count>0) c5.push({ intervention_type:iv, feature_group:fg, mean_delta:sumDelta/count, mean_pass_improvement:sumImprove/count });
+    });
+  });
+
+  // --- Chart6: ECDF ---
+  const selIvs = ['ablation','positive_steering','negative_steering'];
+  const rndIvs = ['random_ablation','random_positive_steering','random_negative_steering'];
+  const selDeltas=[], rndDeltas=[];
+  prompts.forEach(p=>{
+    const b=baselinePass.get(p);
+    if(b===undefined) return;
+    selIvs.forEach(iv=>{ const v=ppMap.get(`${p}|${iv}`); if(v!==undefined) selDeltas.push(v-b); });
+    rndIvs.forEach(iv=>{ const v=ppMap.get(`${p}|${iv}`); if(v!==undefined) rndDeltas.push(v-b); });
+  });
+
+  return { totalRuns: rows.length, baselineMean, ivs, prompts, tasks, families, c1, c2, c3, c4, c5,
+           c6:{ selected:selDeltas.sort((a,b)=>a-b), random:rndDeltas.sort((a,b)=>a-b) } };
+}
+
+function mulberry32(seed){ let s=seed|0; return()=>{ s|=0;s=s+0x6D2B79F5|0; let t=Math.imul(s^s>>>15,1|s); t=t+Math.imul(t^t>>>7,61|t)^t; return((t^t>>>14)>>>0)/4294967296; }; }
+
+// ── Build charts ──────────────────────────────────────────────────────────
+function buildAll(D){
+  const ts = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  document.getElementById('hdr-sub').textContent = `${state.fileName} · ${D.totalRuns.toLocaleString()} runs · ${D.prompts.length} prompts · ${D.tasks.length} tasks · updated ${ts}`;
+  document.getElementById('chip-runs').innerHTML = `<b>${D.totalRuns.toLocaleString()}</b> runs`;
+  document.getElementById('chip-prompts').innerHTML = `<b>${D.prompts.length}</b> prompts`;
+  document.getElementById('chip-tasks').innerHTML = `<b>${D.tasks.length}</b> tasks`;
+  buildC1(D); buildC2(D); buildC3(D); buildC4(D); buildC5(D); buildC6(D);
+}
+
+// ── Chart 1 ───────────────────────────────────────────────────────────────
+function buildC1(D){
+  const panel=document.getElementById('panel-0');
+  panel.innerHTML='';
+  const card=document.createElement('div'); card.className='chart-card';
+  card.innerHTML=`<div class="chart-title">Prompt-Level Pass-Rate Distribution by Intervention</div>
+    <div class="chart-desc">Each dot is one validation prompt. Vertical position = per-prompt pass fraction. Horizontal jitter added. The horizontal bar (—) shows the aggregate pass rate per condition.</div>
+    <div class="chart-interp"><b>What it tells us:</b> Reveals both the <b>average shift</b> and the <b>distribution shape</b> of outcomes across conditions. Comparing the horizontal mean bars for targeted interventions (Ablation, Pos. Steering, Neg. Steering) against Baseline, Noop, and Random controls shows whether any intervention meaningfully shifts overall pass rates, while the vertical spread of dots shows whether prompts tend to pass/fail all-or-nothing (0% vs. 100%) or shift partially across runs.</div>
+    <div class="chart-wrap" id="c1-wrap"></div><div class="legend" id="c1-leg"></div>`;
+  panel.appendChild(card);
+
+  const conditions = [...D.ivs].sort();
+  const W=720,H=235,ml=42,mr=46,mt=16,mb=44;
+  const cw=(W-ml-mr)/conditions.length;
+  const svg=makeSVG(W,H);
+  document.getElementById('c1-wrap').appendChild(svg);
+  const yS=linScale([0,1],[H-mb,mt]);
+
+  [0,0.25,0.5,0.75,1].forEach(v=>{ const y=yS(v);
+    svg.appendChild(svgEl('line',{x1:ml,y1:y,x2:W-mr,y2:y,class:'grid'}));
+    const t=svgEl('text',{x:ml-6,y:y+3.5,'text-anchor':'end','font-size':9.5}); t.textContent=(v*100)+'%'; svg.appendChild(t);
+  });
+  const yb=yS(D.baselineMean);
+  svg.appendChild(svgEl('line',{x1:ml,y1:yb,x2:W-mr,y2:yb,class:'zero-line'}));
+  const rl=svgEl('text',{x:W-mr+4,y:yb+3.5,'font-size':9,fill:'var(--fg3)'}); rl.textContent='baseline'; svg.appendChild(rl);
+
+  const seed=(n)=>{let s=n;return()=>{s=((s*1664525+1013904223)>>>0)/4294967296;return s;};};
+  conditions.forEach((iv,ci)=>{
+    const cx=ml+ci*cw+cw/2;
+    const data=D.c1[iv]; if(!data)return;
+    const rng=seed(ci*137+42);
+    data.vals.forEach((v,pi)=>{
+      const y=yS(v), jitter=(rng()-0.5)*cw*0.65, x=cx+jitter;
+      const dot=svgEl('circle',{cx:x,cy:y,r:3,fill:C[iv]||'var(--accent)',opacity:0.5});
+      dot.addEventListener('mousemove',e=>showTip(`<b>${LABEL[iv]||iv}</b><br>Prompt #${pi+1}: ${v===1?'✓ pass':'✗ fail'}`,e));
+      dot.addEventListener('mouseleave',hideTip);
+      svg.appendChild(dot);
+    });
+    const my=yS(data.mean);
+    svg.appendChild(svgEl('line',{x1:cx-cw*.3,y1:my,x2:cx+cw*.3,y2:my,stroke:C[iv]||'var(--accent)','stroke-width':2.5,'stroke-linecap':'round'}));
+    const xl=svgEl('text',{x:cx,y:H-mb+14,'text-anchor':'middle','font-size':9,transform:`rotate(-25,${cx},${H-mb+14})`}); xl.textContent=LABEL[iv]||iv; svg.appendChild(xl);
+    const rateL=svgEl('text',{x:cx,y:my-6,'text-anchor':'middle','font-size':8.5,fill:C[iv]||'var(--accent)'}); rateL.textContent=(data.mean*100).toFixed(1)+'%'; svg.appendChild(rateL);
+  });
+
+  document.getElementById('c1-leg').innerHTML=
+    ['ablation','positive_steering','negative_steering','random_ablation','random_positive_steering','random_negative_steering','baseline','noop_control']
+    .map(iv=>`<div class="legend-item"><div class="legend-swatch circle" style="background:${C[iv]}"></div>${LABEL[iv]}</div>`).join('')
+    +`<div class="legend-item"><div class="legend-swatch" style="width:14px;height:2px;background:var(--fg3)"></div>Baseline mean</div>`;
+}
+
+// ── Chart 2 ───────────────────────────────────────────────────────────────
+function buildC2(D){
+  const panel=document.getElementById('panel-1');
+  panel.innerHTML='';
+  const card=document.createElement('div'); card.className='chart-card';
+  card.innerHTML=`<div class="chart-title">SAE Feature × Intervention Heatmap</div>
+    <div class="chart-desc">Delta from overall baseline pass rate for each SAE feature under each intervention type. Features grouped by feature_group. Gray cells = not tested in that combination.</div>
+    <div class="chart-interp"><b>What it tells us:</b> Isolates <b>feature-level causality</b>. If specific SAE features genuinely govern task success or failure, <code>success_associated</code> and <code>failure_associated</code> rows should show strong, consistent green or red shifts under targeted steering/ablation while <code>random</code> rows stay near zero. Uniformly muted cells—or similar patterns in the random group—indicate individual features are not driving strong, isolated behavioral changes.</div>
+    <div class="chart-wrap" id="c2-wrap"></div>`;
+  panel.appendChild(card);
+
+  const ivCols=['ablation','positive_steering','negative_steering','random_ablation','random_positive_steering','random_negative_steering'];
+  const ivLabels=['Ablation','Pos. Steer','Neg. Steer','Rnd Abl','Rnd Pos','Rnd Neg'];
+  const ivColors=['var(--c-ablation)','var(--c-pos)','var(--c-neg)','var(--c-rnd-ablation)','var(--c-rnd-pos)','var(--c-rnd-neg)'];
+
+  const rows=[...D.c2];
+  const go={'success_associated':0,'failure_associated':1,'random':2};
+  rows.sort((a,b)=>(go[a.fg]||9)-(go[b.fg]||9)||a.fid-b.fid);
+
+  const cellH=17,cellW=62,ml=58,mt=36,mr=16,mb=26;
+  const W=ml+ivCols.length*cellW+mr, H=mt+rows.length*cellH+mb;
+  const svg=makeSVG(W,H);
+  document.getElementById('c2-wrap').appendChild(svg);
+
+  ivLabels.forEach((lbl,ci)=>{ const x=ml+ci*cellW+cellW/2;
+    const t=svgEl('text',{x,y:mt-6,'text-anchor':'middle','font-size':9.5,fill:ivColors[ci]}); t.textContent=lbl; svg.appendChild(t); });
+
+  function dColor(d){ if(d===null||isNaN(d))return'var(--bg3)'; const v=Math.max(-.3,Math.min(.3,d));
+    if(v>0)return`color-mix(in oklch,var(--pos-hi) ${v/.3*85}%,var(--neu))`;
+    if(v<0)return`color-mix(in oklch,var(--neg-hi) ${-v/.3*85}%,var(--neu))`;
+    return'var(--neu)';}
+
+  let lastFg=null;
+  rows.forEach((row,ri)=>{
+    const y=mt+ri*cellH;
+    if(row.fg!==lastFg){
+      svg.appendChild(svgEl('line',{x1:ml,y1:y,x2:W-mr,y2:y,stroke:'var(--border)','stroke-width':1.5}));
+      const gMap={success_associated:'success',failure_associated:'failure',random:'random'};
+      const gl=svgEl('text',{x:4,y:y+cellH*.68,'font-size':8.5,fill:'var(--fg3)','font-weight':'500'}); gl.textContent=gMap[row.fg]||row.fg; svg.appendChild(gl);
+      lastFg=row.fg;
+    }
+    const fl=svgEl('text',{x:ml-5,y:y+cellH*.7,'text-anchor':'end','font-size':9}); fl.textContent=row.fid; svg.appendChild(fl);
+    ivCols.forEach((col,ci)=>{
+      const val=row[col], x=ml+ci*cellW;
+      const rect=svgEl('rect',{x:x+1,y:y+1,width:cellW-2,height:cellH-2,rx:3,fill:dColor(val)});
+      rect.addEventListener('mousemove',e=>showTip(`<b>Feature ${row.fid}</b> <span class="dim">(${row.fg})</span><br>${ivLabels[ci]}: <b>${val!==null?(val>=0?'+':'')+(val*100).toFixed(1)+'pp':'n/a'}</b>`,e));
+      rect.addEventListener('mouseleave',hideTip);
+      svg.appendChild(rect);
+      if(val!==null){ const vl=svgEl('text',{x:x+cellW/2,y:y+cellH*.7,'text-anchor':'middle','font-size':8,fill:Math.abs(val)>.1?'var(--fg)':'var(--fg3)'}); vl.textContent=(val>=0?'+':'')+(val*100).toFixed(1); svg.appendChild(vl); }
+    });
+  });
+
+  // Legend
+  const lx=ml,ly=H-8;
+  [-0.25,-.15,-.05,0,.05,.15,.25].forEach((v,i)=>{
+    const rect=svgEl('rect',{x:lx+i*26,y:ly-12,width:26,height:8,rx:2,fill:dColor(v)}); svg.appendChild(rect);
+    if(i===0||i===3||i===6){ const t=svgEl('text',{x:lx+i*26+13,y:ly+2,'text-anchor':'middle','font-size':7.5,fill:'var(--fg3)'}); t.textContent=(v>=0?'+':'')+(v*100).toFixed(0)+'pp'; svg.appendChild(t); }
+  });
+}
+
+// ── Chart 3 ───────────────────────────────────────────────────────────────
+function buildC3(D){
+  const panel=document.getElementById('panel-2');
+  panel.innerHTML='';
+  const card=document.createElement('div'); card.className='chart-card';
+  card.innerHTML=`<div class="chart-title">Effect-Size Forest Plot</div>
+    <div class="chart-desc">Mean paired pass-rate change vs baseline with 95% bootstrap CIs (2 000 resamples, n = ${D.prompts.length} paired prompts). Diamond = mean estimate.</div>
+    <div class="chart-interp"><b>What it tells us:</b> Establishes <b>statistical significance and effect magnitude</b>. Any condition whose horizontal confidence bar crosses the vertical <code>0.0pp</code> dashed line shows no statistically reliable net change over baseline, and comparing targeted intervals against Noop and Random controls tests whether observed gains or dips exceed background noise.</div>
+    <div class="chart-wrap" id="c3-wrap"></div>`;
+  panel.appendChild(card);
+
+  const data=[...D.c3];
+  const W=600,H=48+data.length*34,ml=170,mr=85,mt=20,mb=26;
+  const allV=data.flatMap(d=>[d.ci_low,d.ci_high]);
+  const xMin=Math.min(...allV)-.005, xMax=Math.max(...allV)+.005;
+  const xS=linScale([xMin,xMax],[ml,W-mr]);
+  const svg=makeSVG(W,H);
+  document.getElementById('c3-wrap').appendChild(svg);
+
+  [-0.025,-0.02,-0.015,-0.01,-0.005,0,0.005,0.01].forEach(v=>{
+    if(v<xMin||v>xMax)return;
+    const x=xS(v);
+    svg.appendChild(svgEl('line',{x1:x,y1:mt,x2:x,y2:H-mb,class:'grid'}));
+    const t=svgEl('text',{x,y:H-mb+12,'text-anchor':'middle','font-size':8.5}); t.textContent=(v*100).toFixed(1)+'pp'; svg.appendChild(t);
+  });
+  const x0=xS(0);
+  svg.appendChild(svgEl('line',{x1:x0,y1:mt,x2:x0,y2:H-mb,class:'zero-line'}));
+  const xl=svgEl('text',{x:(ml+W-mr)/2,y:H-3,'text-anchor':'middle','font-size':9.5}); xl.textContent='Mean paired difference in pass rate (pp)'; svg.appendChild(xl);
+
+  data.forEach((d,i)=>{
+    const y=mt+15+i*34, color=C[d.condition]||'var(--accent)';
+    const lbl=svgEl('text',{x:ml-10,y:y+4,'text-anchor':'end','font-size':10.5,fill:'var(--fg)'}); lbl.textContent=LABEL[d.condition]||d.condition; svg.appendChild(lbl);
+    const x1=xS(d.ci_low),x2=xS(d.ci_high),xm=xS(d.mean);
+    svg.appendChild(svgEl('line',{x1,y1:y,x2,y2:y,stroke:color,'stroke-width':2.2,'stroke-linecap':'round'}));
+    [x1,x2].forEach(cx=>svg.appendChild(svgEl('line',{x1:cx,y1:y-5,x2:cx,y2:y+5,stroke:color,'stroke-width':1.5})));
+    const r=6;
+    const poly=svgEl('polygon',{points:`${xm},${y-r} ${xm+r},${y} ${xm},${y+r} ${xm-r},${y}`,fill:color,opacity:.9});
+    poly.addEventListener('mousemove',e=>showTip(`<b>${LABEL[d.condition]||d.condition}</b><br>Mean: ${(d.mean*100).toFixed(2)}pp<br>95% CI: [${(d.ci_low*100).toFixed(2)}, ${(d.ci_high*100).toFixed(2)}]pp<br>n=${d.n}`,e));
+    poly.addEventListener('mouseleave',hideTip);
+    svg.appendChild(poly);
+    const vl=svgEl('text',{x:W-mr+6,y:y+4,'font-size':9.5,fill:color}); vl.textContent=(d.mean>=0?'+':'')+(d.mean*100).toFixed(2)+'pp'; svg.appendChild(vl);
+  });
+}
+
+// ── Chart 4 ───────────────────────────────────────────────────────────────
+function buildC4(D){
+  const panel=document.getElementById('panel-3');
+  panel.innerHTML='';
+  const card=document.createElement('div'); card.className='chart-card';
+  card.innerHTML=`<div class="chart-title">Prompt-Family Interaction Dumbbell Plot</div>
+    <div class="chart-desc">Baseline (open circle) vs intervention (filled diamond) pass rate by prompt family and intervention type. Line length = effect size.</div>
+    <div class="chart-interp"><b>What it tells us:</b> Checks for <b>hidden subgroup effects (Simpson's paradox)</b>. Even if an intervention averages out to near zero globally, long connecting lines pointing in opposite directions across prompt families reveal whether steering helps specific types of prompts while hurting others.</div>
+    <div class="chart-wrap" id="c4-wrap"></div><div class="legend" id="c4-leg"></div>`;
+  panel.appendChild(card);
+
+  const families=[...new Set(D.c4.map(d=>d.family))];
+  const ivs3=['ablation','positive_steering','negative_steering'];
+  const W=540,H=235,ml=52,mr=30,mt=24,mb=40;
+  const gW=(W-ml-mr)/families.length, spIv=gW/ivs3.length;
+  const allR=D.c4.flatMap(d=>[d.baseline,d.intervention_rate]);
+  const rMin=Math.min(...allR)-.01, rMax=Math.max(...allR)+.01;
+  const yS=linScale([rMin,rMax],[H-mb,mt]);
+  const svg=makeSVG(W,H);
+  document.getElementById('c4-wrap').appendChild(svg);
+
+  [rMin,(rMin+rMax)/2,rMax].concat([.30,.32,.34,.36,.38,.40,.42].filter(v=>v>rMin&&v<rMax)).sort((a,b)=>a-b).forEach(v=>{
+    const y=yS(v);
+    svg.appendChild(svgEl('line',{x1:ml,y1:y,x2:W-mr,y2:y,class:'grid'}));
+    const t=svgEl('text',{x:ml-6,y:y+3.5,'text-anchor':'end','font-size':9}); t.textContent=(v*100).toFixed(0)+'%'; svg.appendChild(t);
+  });
+  svg.appendChild(svgEl('line',{x1:ml,y1:yS(D.baselineMean),x2:W-mr,y2:yS(D.baselineMean),class:'zero-line'}));
+
+  families.forEach((fam,fi)=>{
+    const cx=ml+fi*gW+gW/2;
+    const t=svgEl('text',{x:cx,y:H-mb+14,'text-anchor':'middle','font-size':10.5,'font-weight':'500'}); t.textContent=fam[0].toUpperCase()+fam.slice(1); svg.appendChild(t);
+    if(fi>0)svg.appendChild(svgEl('line',{x1:ml+fi*gW,y1:mt,x2:ml+fi*gW,y2:H-mb,stroke:'var(--border)','stroke-width':1}));
+    ivs3.forEach((iv,ii)=>{
+      const row=D.c4.find(d=>d.family===fam&&d.intervention===iv); if(!row)return;
+      const color=C[iv]||'var(--accent)';
+      const x=ml+fi*gW+ii*spIv+spIv/2;
+      const yBase=yS(row.baseline), yInt=yS(row.intervention_rate);
+      svg.appendChild(svgEl('line',{x1:x,y1:yBase,x2:x,y2:yInt,stroke:color,'stroke-width':2,opacity:.6}));
+      const bc=svgEl('circle',{cx:x,cy:yBase,r:6,fill:'var(--bg2)',stroke:color,'stroke-width':2});
+      bc.addEventListener('mousemove',e=>showTip(`<b>${fam} · ${LABEL[iv]}</b><br>Baseline: ${(row.baseline*100).toFixed(1)}%<br>Intervention: ${(row.intervention_rate*100).toFixed(1)}%<br>Δ: ${((row.intervention_rate-row.baseline)*100).toFixed(2)}pp`,e));
+      bc.addEventListener('mouseleave',hideTip);
+      svg.appendChild(bc);
+      const r=5.5;
+      const poly=svgEl('polygon',{points:`${x},${yInt-r} ${x+r},${yInt} ${x},${yInt+r} ${x-r},${yInt}`,fill:color});
+      poly.addEventListener('mousemove',e=>showTip(`<b>${fam} · ${LABEL[iv]}</b><br>Baseline: ${(row.baseline*100).toFixed(1)}%<br>Intervention: ${(row.intervention_rate*100).toFixed(1)}%<br>Δ: ${((row.intervention_rate-row.baseline)*100).toFixed(2)}pp`,e));
+      poly.addEventListener('mouseleave',hideTip);
+      svg.appendChild(poly);
+      const short={ablation:'Abl',positive_steering:'Pos',negative_steering:'Neg'};
+      const tl=svgEl('text',{x,y:H-mb+26,'text-anchor':'middle','font-size':7.5,transform:`rotate(-25,${x},${H-mb+26})`,fill:'var(--fg3)'}); tl.textContent=short[iv]||iv; svg.appendChild(tl);
+    });
+  });
+  document.getElementById('c4-leg').innerHTML=
+    `<div class="legend-item"><svg width="14" height="12" viewBox="0 0 16 14"><circle cx="8" cy="7" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>Baseline</div>`+
+    `<div class="legend-item"><svg width="12" height="12" viewBox="0 0 14 14"><polygon points="7,1 13,7 7,13 1,7" fill="currentColor"/></svg>Intervention</div>`+
+    ['ablation','positive_steering','negative_steering'].map(iv=>`<div class="legend-item"><div class="legend-swatch" style="background:${C[iv]}"></div>${LABEL[iv]}</div>`).join('');
+}
+
+// ── Chart 5 ───────────────────────────────────────────────────────────────
+function buildC5(D){
+  const panel=document.getElementById('panel-4');
+  panel.innerHTML='';
+  const card=document.createElement('div'); card.className='chart-card';
+  card.innerHTML=`<div class="chart-title">Intervention-Response Landscape</div>
+    <div class="chart-desc">Mean residual activation change (x) vs mean pass-rate improvement over baseline (y) per intervention × feature-group. Large perturbations don't reliably predict better outcomes.</div>
+    <div class="chart-interp"><b>What it tells us:</b> Tests the <b>dose–response relationship</b> between internal activation perturbations and external task behavior. Moving further right along the x-axis (causing larger residual-stream shifts) does not systematically push points upward into higher pass-rate improvements along the y-axis.</div>
+    <div class="chart-wrap" id="c5-wrap"></div><div class="legend" id="c5-leg"></div>`;
+  panel.appendChild(card);
+
+  const data=D.c5;
+  const W=540,H=245,ml=58,mr=55,mt=20,mb=44;
+  const xVals=data.map(d=>d.mean_delta), yVals=data.map(d=>d.mean_pass_improvement);
+  const xMin=Math.min(...xVals)-.1, xMax=Math.max(...xVals)+.3;
+  const yExt=Math.max(Math.abs(Math.min(...yVals)),Math.abs(Math.max(...yVals)))*1.6+.001;
+  const xS=linScale([xMin,xMax],[ml,W-mr]), yS=linScale([-yExt,yExt],[H-mb,mt]);
+  const svg=makeSVG(W,H);
+  document.getElementById('c5-wrap').appendChild(svg);
+
+  [-0.01,-.005,0,.005].forEach(v=>{ const y=yS(v);
+    svg.appendChild(svgEl('line',{x1:ml,y1:y,x2:W-mr,y2:y,class:'grid'}));
+    const t=svgEl('text',{x:ml-6,y:y+3.5,'text-anchor':'end','font-size':9}); t.textContent=(v*100).toFixed(1)+'pp'; svg.appendChild(t);
+  });
+  const xTkMax=Math.ceil(xMax);
+  for(let v=0;v<=xTkMax;v+=v<1?.5:1){ if(v<xMin)continue;
+    const x=xS(v);
+    svg.appendChild(svgEl('line',{x1:x,y1:mt,x2:x,y2:H-mb,class:'grid'}));
+    const t=svgEl('text',{x,y:H-mb+12,'text-anchor':'middle','font-size':9}); t.textContent=v.toFixed(1); svg.appendChild(t);
+  }
+  svg.appendChild(svgEl('line',{x1:ml,y1:yS(0),x2:W-mr,y2:yS(0),class:'zero-line'}));
+  svg.appendChild(svgEl('line',{x1:xS(0),y1:mt,x2:xS(0),y2:H-mb,class:'zero-line'}));
+  const xl=svgEl('text',{x:(ml+W-mr)/2,y:H-mb+28,'text-anchor':'middle','font-size':9.5}); xl.textContent='Mean residual activation Δ'; svg.appendChild(xl);
+  const yl=svgEl('text',{'text-anchor':'middle','font-size':9.5,transform:`translate(13,${(mt+H-mb)/2}) rotate(-90)`}); yl.textContent='Pass-rate improvement (pp)'; svg.appendChild(yl);
+
+  const fgShape={success_associated:'circle',failure_associated:'diamond',random:'square'};
+  const ivShort={ablation:'Abl',positive_steering:'Pos',negative_steering:'Neg',random_ablation:'RAbl',random_negative_steering:'RNeg',random_positive_steering:'RPos'};
+
+  data.forEach(d=>{
+    const x=xS(d.mean_delta), y=yS(d.mean_pass_improvement), color=C[d.intervention_type]||'var(--accent)', r=7.5;
+    const shape=fgShape[d.feature_group]||'circle';
+    let mark;
+    if(shape==='circle') mark=svgEl('circle',{cx:x,cy:y,r,fill:color,opacity:.85});
+    else if(shape==='diamond') mark=svgEl('polygon',{points:`${x},${y-r} ${x+r},${y} ${x},${y+r} ${x-r},${y}`,fill:color,opacity:.85});
+    else mark=svgEl('rect',{x:x-r*.75,y:y-r*.75,width:r*1.5,height:r*1.5,rx:2,fill:color,opacity:.85});
+    mark.addEventListener('mousemove',e=>showTip(`<b>${LABEL[d.intervention_type]||d.intervention_type}</b><br><span class="dim">${d.feature_group}</span><br>Residual Δ: ${d.mean_delta.toFixed(3)}<br>Pass improvement: ${(d.mean_pass_improvement*100).toFixed(2)}pp`,e));
+    mark.addEventListener('mouseleave',hideTip);
+    svg.appendChild(mark);
+    const lbl=svgEl('text',{x:x+r+3,y:y+3.5,'font-size':8,fill:'var(--fg3)'}); lbl.textContent=(ivShort[d.intervention_type]||d.intervention_type)+'·'+(d.feature_group==='success_associated'?'succ':d.feature_group==='failure_associated'?'fail':'rnd'); svg.appendChild(lbl);
+  });
+
+  document.getElementById('c5-leg').innerHTML=
+    `<div class="legend-item"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="var(--fg2)"/></svg>success-associated</div>`+
+    `<div class="legend-item"><svg width="12" height="12"><polygon points="6,1 11,6 6,11 1,6" fill="var(--fg2)"/></svg>failure-associated</div>`+
+    `<div class="legend-item"><svg width="12" height="12"><rect x="2" y="2" width="8" height="8" rx="2" fill="var(--fg2)"/></svg>random</div>`+
+    ['ablation','positive_steering','negative_steering','random_positive_steering'].map(iv=>`<div class="legend-item"><div class="legend-swatch" style="background:${C[iv]}"></div>${LABEL[iv]}</div>`).join('');
+}
+
+// ── Chart 6 ───────────────────────────────────────────────────────────────
+function buildC6(D){
+  const panel=document.getElementById('panel-5');
+  panel.innerHTML='';
+  const card=document.createElement('div'); card.className='chart-card';
+  card.innerHTML=`<div class="chart-title">Selected vs Random ECDF of Prompt-Level Effects</div>
+    <div class="chart-desc">Empirical CDF of per-prompt pass-rate changes vs baseline. Selected SAE features (ablation + steering, n=${D.c6.selected.length}) vs random controls (n=${D.c6.random.length}). Hover to read exact CDF values.</div>
+    <div class="chart-interp"><b>What it tells us:</b> Captures <b>tail sensitivity and sparsity across prompts</b>. The sharp vertical step at <code>0pp</code> confirms that roughly 95% of prompts are completely unaffected, while any horizontal separation between the Selected and Random curves in the left or right tails shows whether targeted SAE interventions create more frequent edge-case wins or regressions than random perturbations.</div>
+    <div class="chart-wrap" id="c6-wrap"></div><div class="legend" id="c6-leg"></div>`;
+  panel.appendChild(card);
+
+  function ecdf(arr){ const s=[...arr].sort((a,b)=>a-b),n=s.length,pts=[{x:s[0],y:0}]; s.forEach((v,i)=>pts.push({x:v,y:(i+1)/n})); return pts; }
+  const selPts=ecdf(D.c6.selected), rndPts=ecdf(D.c6.random);
+
+  const W=540,H=240,ml=50,mr=26,mt=20,mb=42;
+  const allX=[...D.c6.selected,...D.c6.random];
+  const xMin=Math.min(...allX)-.06, xMax=Math.max(...allX)+.06;
+  const xS=linScale([xMin,xMax],[ml,W-mr]), yS=linScale([0,1],[H-mb,mt]);
+  const svg=makeSVG(W,H);
+  document.getElementById('c6-wrap').appendChild(svg);
+
+  [0,.2,.4,.6,.8,1].forEach(v=>{ const y=yS(v);
+    svg.appendChild(svgEl('line',{x1:ml,y1:y,x2:W-mr,y2:y,class:'grid'}));
+    const t=svgEl('text',{x:ml-6,y:y+3.5,'text-anchor':'end','font-size':9}); t.textContent=(v*100).toFixed(0)+'%'; svg.appendChild(t);
+  });
+  [-1,-.75,-.5,-.25,0,.25,.5].forEach(v=>{ if(v<xMin||v>xMax)return;
+    const x=xS(v);
+    svg.appendChild(svgEl('line',{x1:x,y1:mt,x2:x,y2:H-mb,class:'grid'}));
+    const t=svgEl('text',{x,y:H-mb+12,'text-anchor':'middle','font-size':9}); t.textContent=(v*100).toFixed(0)+'pp'; svg.appendChild(t);
+  });
+  svg.appendChild(svgEl('line',{x1:xS(0),y1:mt,x2:xS(0),y2:H-mb,class:'zero-line'}));
+  const xl=svgEl('text',{x:(ml+W-mr)/2,y:H-mb+27,'text-anchor':'middle','font-size':9.5}); xl.textContent='Per-prompt pass-rate change vs baseline (pp)'; svg.appendChild(xl);
+  const yl=svgEl('text',{'text-anchor':'middle','font-size':9.5,transform:`translate(13,${(mt+H-mb)/2}) rotate(-90)`}); yl.textContent='Cumulative proportion'; svg.appendChild(yl);
+
+  function drawECDF(pts,color,sw=2.2){
+    let d='';
+    pts.forEach((p,i)=>{ const x=xS(p.x),y=yS(p.y);
+      if(i===0)d+=`M ${x} ${y}`;
+      else{ const py=yS(pts[i-1].y); d+=` L ${x} ${py} L ${x} ${y}`; }
+    });
+    d+=` L ${xS(xMax)} ${yS(pts[pts.length-1].y)}`;
+    svg.appendChild(svgEl('path',{d,fill:'none',stroke:color,'stroke-width':sw,'stroke-linejoin':'round'}));
+  }
+  drawECDF(rndPts,'var(--c-rnd-pos)',1.8);
+  drawECDF(selPts,'var(--c-ablation)',2.2);
+
+  function interpECDF(pts,x){ for(let i=pts.length-1;i>=0;i--)if(pts[i].x<=x)return pts[i].y; return 0; }
+  const ov=svgEl('rect',{x:ml,y:mt,width:W-ml-mr,height:H-mt-mb,fill:'transparent'});
+  ov.addEventListener('mousemove',e=>{
+    const rect=svg.getBoundingClientRect(),sf=W/rect.width,rawX=(e.clientX-rect.left)*sf;
+    const dataX=xMin+(rawX-ml)/(W-ml-mr)*(xMax-xMin);
+    if(dataX<xMin||dataX>xMax){hideTip();return;}
+    const sY=interpECDF(selPts,dataX),rY=interpECDF(rndPts,dataX);
+    showTip(`<b>Δ = ${(dataX*100).toFixed(1)}pp</b><br>Selected CDF: ${(sY*100).toFixed(1)}%<br>Random CDF: ${(rY*100).toFixed(1)}%<br>Diff: ${((sY-rY)*100).toFixed(1)}pp`,e);
+  });
+  ov.addEventListener('mouseleave',hideTip);
+  svg.appendChild(ov);
+
+  const ann=svgEl('text',{x:xS(0)+6,y:yS(.97)-3,'font-size':8.5,fill:'var(--fg3)'}); ann.textContent='~95% of prompts unaffected'; svg.appendChild(ann);
+  document.getElementById('c6-leg').innerHTML=
+    `<div class="legend-item"><svg width="20" height="4"><line x1="0" y1="2" x2="20" y2="2" stroke="var(--c-ablation)" stroke-width="2.2"/></svg>Selected SAE features (n=${D.c6.selected.length})</div>`+
+    `<div class="legend-item"><svg width="20" height="4"><line x1="0" y1="2" x2="20" y2="2" stroke="var(--c-rnd-pos)" stroke-width="1.8"/></svg>Random controls (n=${D.c6.random.length})</div>`;
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────
+(async function init(){
+  if(location.protocol === 'file:'){
+    showLoadPrompt('Opened directly from disk (file://) — click Open CSV or drop your CSV file below.');
+    return;
+  }
+  try{
+    await loadFromURL(DEFAULT_CSV_URL, false);
+  }catch(err){
+    showLoadPrompt(`Could not auto-load ${DEFAULT_CSV_URL} (${err.message}).`);
+  }
+})();
+</script>
+
+</body></html>

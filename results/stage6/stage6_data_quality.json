@@ -1,0 +1,69 @@
+{
+  "source_file": "results\\stage5\\stage5_results.csv",
+  "total_rows": 5919,
+  "unique_experiment_ids": 5919,
+  "duplicate_experiment_id_rows": 0,
+  "unique_prompt_instances": 135,
+  "unique_task_ids": 45,
+  "prompt_families": {
+    "canonical": 1986,
+    "paraphrase": 1986,
+    "ood": 1947
+  },
+  "splits": {
+    "validation": 5919
+  },
+  "intervention_type_counts": {
+    "random_ablation": 1053,
+    "random_positive_steering": 1053,
+    "random_negative_steering": 1053,
+    "ablation": 830,
+    "positive_steering": 830,
+    "negative_steering": 830,
+    "baseline": 135,
+    "noop_control": 135
+  },
+  "selected_feature_ids_observed": [
+    1103,
+    1794,
+    2009,
+    2134,
+    2291,
+    7828,
+    7897,
+    8517,
+    11412,
+    12015
+  ],
+  "random_feature_ids_observed": [
+    409,
+    1680,
+    1824,
+    1825,
+    1826,
+    2290,
+    3662,
+    4016,
+    4017,
+    4510,
+    4511,
+    10478,
+    10481,
+    10484,
+    12076,
+    12155,
+    12159
+  ],
+  "baseline_rows": 135,
+  "baseline_nonzero_hook_call_rows": 3,
+  "noop_rows": 135,
+  "noop_nonzero_hook_call_rows": 135,
+  "noop_nonzero_residual_delta_rows": 0,
+  "missing_outcome_rows_removed": 0,
+  "feature_group_counts": {
+    "random": 3159,
+    "success_associated": 1245,
+    "failure_associated": 1245,
+    "none": 270
+  }
+}
